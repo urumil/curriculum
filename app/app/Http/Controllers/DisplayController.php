@@ -26,6 +26,7 @@ class DisplayController extends Controller
     //出品詳細
     public function saleDetail(int $salesid) {
         echo $salesid;
+        $sale = Sale::find('id');
 
         return view('sale.detail');
     }
