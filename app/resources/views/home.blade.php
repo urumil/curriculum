@@ -9,6 +9,7 @@
                     <img src="..." class="card-img-top" alt="sales_picture">
                     <div class="card-body">
                         <h5 class="card-title">{{ $sales['price'] }}円</h5>
+                        <a href="{{ route('sale.detail', ['id' => $sales['id']]) }}" class="btn btn-primary">詳細</a>
                     </div>
                 </div>
             @endforeach

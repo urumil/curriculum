@@ -21,12 +21,27 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar bg-body-tertiary" style="background-color: #e3f2fd;">
+        <nav class="navbar bg-body-tertiary" style="background-color: #ffffff;">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="../../../image/freemarket.png" alt="Bootstrap" width="80" height="80">
+                    <img src="../../../image/freemarket.png" alt="Bootstrap" width="85" height="85">
                 </a>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Disabled</a>
+                    </li>
+                </ul>
            </div>
+           
        </nav>
 
         <main class="py-4">
