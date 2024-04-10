@@ -20,5 +20,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/', [DisplayController::class, 'index']);
-//出品商品の詳細画面
-Route::get('/sale/{id}/detail', [DisplayController::class, 'saleDetail'])->name('sale.detail');
+//出品商品の画面
+Route::get('/sale.detail/{id}', [DisplayController::class, 'saleDetail'])->name('sale.detail');
