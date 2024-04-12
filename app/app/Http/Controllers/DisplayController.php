@@ -23,11 +23,18 @@ class DisplayController extends Controller
         ]);
     }
 
-    //出品商品の詳細
-    public function saleDetail(int $salesid) {
-        //echo $salesid;
+    //出品商品画面
+    public function saleDetail(int $salesid) 
+    {
+        echo $salesid;
         $sale = Sale::find($salesid);
+
         return view('sale.detail', compact('sale'));
     }
 
+    //出品商品の詳細
+    // public function show($id)
+    // {
+        
+    // }
 }

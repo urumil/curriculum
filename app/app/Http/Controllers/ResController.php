@@ -11,9 +11,9 @@ class ResController extends Controller
    public function saleDetail(int $salesid) 
    {
       //echo $salesid;
-      $sale = Sale::find('id');
+      $sale = Sale::find('$salesid');
 
-      return view('sale.detail')->with('sale',$sale);
+      return view('detail', compact('sale'));
     }
 
     /**

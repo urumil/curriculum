@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DisplayController;
+use App\Http\Controllers\ResController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +23,7 @@ Auth::routes();
 
 Route::get('/', [DisplayController::class, 'index']);
 //出品商品の画面
-Route::get('/sale.detail/{id}', [DisplayController::class, 'saleDetail'])->name('sale.detail');
+Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('detail');
+//出品商品の詳細画面
+//Route::get('/show/{id}', [DisplayController::class, 'show'])->name('sale.show');
+
