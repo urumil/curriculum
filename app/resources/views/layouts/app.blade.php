@@ -23,22 +23,28 @@
     <div id="app">
         <nav class="navbar bg-body-tertiary" style="background-color: #ffffff;">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="/">
                     <img src="../../../image/freemarket.png" alt="Bootstrap" width="85" height="85">
                 </a>
                 <ul class="nav justify-content-end">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Active</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li>
+                    @if(Auth::check())
+                        <span class="nav-link">
+                          <a href="{{ route('mypage') }}">{{ Auth::user()->name }}</a>
+                        </span>
+                        <a class="nav-link" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            ログアウト
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                               
+                    @else
+                        <a href="{{ route('login') }}" class="nav-link" >ログイン</a>
+                         
+                        <a href="{{ route('register') }}" class="nav-link" >新規登録</a>
+                    @endif
                 </ul>
            </div>
            

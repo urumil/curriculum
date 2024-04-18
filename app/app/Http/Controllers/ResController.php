@@ -10,10 +10,15 @@ class ResController extends Controller
    //出品詳細
    public function saleDetail(int $salesid) 
    {
-      //echo $salesid;
-      $sale = Sale::find('$salesid');
+        //Eloquent
+        //モデルのインスタンスを生成、変数に代入
+        $sale = new Sale;
+        //モデルから全レコードを取得
+        $sale_all = $sale->all()->toArray();
 
-      return view('detail', compact('sale'));
+        return view('detail', [
+            'sale' => $sale_all,
+        ]);
     }
 
     /**
@@ -31,6 +36,11 @@ class ResController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function create_form() 
+    {
+        
+        
+    }
     public function create()
     {
         //

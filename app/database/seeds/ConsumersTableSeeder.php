@@ -14,10 +14,10 @@ class ConsumersTableSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('consumers')->insert([
+        DB::table('users')->insert([
             'name' => '山田太郎',
             'email' => 'test@test.co.jp',
-            'password' => 'test',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

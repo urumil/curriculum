@@ -16,25 +16,11 @@ class DisplayController extends Controller
         //モデルから全レコードを取得
         $sale_all = $sale->all()->toArray();
         
-        var_dump($sale_all);
+        //var_dump($sale_all);
 
         return view('home', [
             'sale' => $sale_all,
         ]);
     }
 
-    //出品商品画面
-    public function saleDetail(int $salesid) 
-    {
-        echo $salesid;
-        $sale = Sale::find($salesid);
-
-        return view('sale.detail', compact('sale'));
-    }
-
-    //出品商品の詳細
-    // public function show($id)
-    // {
-        
-    // }
 }
