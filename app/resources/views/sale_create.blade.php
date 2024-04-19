@@ -3,16 +3,12 @@
 @section('content')
 <h1 class="text-center">出品商品登録</h1>
 <div class="card-body">
-    <form action="{{ route('create') }}" method="post"> 
+    <form action="{{ route('create') }}" method="post" enctype="multipart/form-data"> 
         @csrf
         <div>商品画像</div>
-        <span class="item-image-form image-picker">
-          <input type="file" name="item-image" class="d-none" accept="image/png,image/jpeg,image/gif" id="item-image" value="{{ old('image') }}"/>
-          <label for="item-image" class="d-inline-block" role="button">
-              <img src="" style="object-fit: cover; width: 300px; height: 300px;">
-          </label>
-          
-</span>
+        <div class="form-group row">
+          <input type="file" name="image"  id="item-image" value="{{ old('image') }}"/>
+        </div>
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">商品名</label>
           <div class="col-sm-10">
