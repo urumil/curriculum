@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
+    protected $fillable = ['name', 'price', 'quality', 'comment', 'image'];
     //テーブル結合
-    public function purchase() {
-        return $this->hasMany('App\Purchase', 'id', 'id');
+    public function user() {  
+        return $this->belongsTo('App\User', 'id', 'user_id');
     }
+
+
 }

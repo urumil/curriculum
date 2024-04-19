@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sale;
+use App\User;
 
 class ResController extends Controller
 {
@@ -36,14 +37,27 @@ class ResController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //登録画面
     public function create_form() 
     {
-        
+        //
+        return view('sale_create');
         
     }
-    public function create()
+    //登録処理
+    public function create(Request $request)
     {
         //
+        $sale = new Sale;
+
+        $sale->name = $request->name;
+        $sale->price = $request->price;
+        $sale->quality = $request->quality;
+        $sale->comment = $request->comment;
+        $sale->image = $request->image;
+
+        $sale->save();
+        return redirect('/');
     }
 
     /**
