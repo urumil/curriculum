@@ -47,17 +47,23 @@ class ResController extends Controller
     //登録処理
     public function create(Request $request)
     {
-        //
-        $sale = new Sale;
+        $user = new User;
 
-        $sale->name = $request->name;
-        $sale->price = $request->price;
-        $sale->quality = $request->quality;
-        $sale->comment = $request->comment;
-        $sale->image = $request->image;
+        // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
+        $image = $request->file('image')->getClientOriginalName();
+        //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+        $name = date('Ymd_His').'_'.$image;
+        //public/imageに画像を保存する
+        $request->file('image')->move('public/image/');
+        // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
+        $user->image = $image;
 
-        $sale->save();
-        return redirect('/');
+        $user->name = $request->name;
+        $user->name = $request->name;
+        //DBに保存
+        $user->save();
+        //画像をアップする画面へ戻る
+        return back();
     }
 
     /**
