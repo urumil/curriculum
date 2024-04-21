@@ -14,7 +14,10 @@ class AddUserIdLikes extends Migration
     public function up()
     {
         Schema::table('likes', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->integer('user_id');
+            $table->integer('sales_id');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +30,7 @@ class AddUserIdLikes extends Migration
     {
         Schema::table('likes', function (Blueprint $table) {
             $table->dropColumn('user_id');
+            $table->dropColumn('sales_id');
         });
     }
 }

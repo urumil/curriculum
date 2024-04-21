@@ -12,7 +12,7 @@ class Purchase extends Model
    }
 
    //1人の使用者（Consumer）に対して、多数の購入（Purchase）
-   public function consumer() {
-      return $this->belongsTo('App\Consumer', 'consumer_id', 'id');
+   public function user() {
+      return $this->belongsTo('App\User', 'user_id', 'id');
   }
 }

@@ -3,7 +3,7 @@
 @section('content')
 
 @foreach($sale as $sales)
-  <img src="../../../image/freemarket.png" class="rounded mx-auto d-block" alt="...">
+  <img src="{{ asset('image/' . $sales['picture']) }}" alt="{{ $sales['picture'] }}" class="rounded mx-auto d-block">
   <div class="card-body">
     <p class="card-text">商品名　　{{ $sales['name'] }}</p>
     <p class="card-text">価格　　{{ $sales['price'] }}円</p>
@@ -13,7 +13,7 @@
   </div>
   <div class="grid text-center">
     <button type="button" class="btn btn-outline-danger">いいね</button>
-    <button type="button" class="btn btn-outline-success">購入</button>
+    <a class="btn btn-primary" href="{{ route('buy', ['id' => $sales['id']]) }}" role="button">購入</a>
   </div>
 @endforeach  
 

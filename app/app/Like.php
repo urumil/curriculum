@@ -12,8 +12,8 @@ class Like extends Model
         return $this->belongsTo('App\Sale', 'sale_id', 'id');
     }
 
-    //1人の使用者（Consumer）に対して、多数のいいね（Like)
-    public function consumer() {
-        return $this->belongsTo('App\Consumer', 'consumer_id', 'id');
+    //1人の使用者（User）に対して、多数のいいね（Like)
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 }

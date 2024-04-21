@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Sale;
 use App\User;
+use App\Purchase;
 
 class ResController extends Controller
 {
@@ -13,12 +15,25 @@ class ResController extends Controller
    {
         //Eloquent
         //モデルのインスタンスを生成、変数に代入
-        $sale = new Sale;
+        $sale = Sale::find($salesid);
         //モデルから全レコードを取得
         $sale_all = $sale->all()->toArray();
 
         return view('detail', [
             'sale' => $sale_all,
+        ]);
+    }
+
+    //購入画面
+    public function buy_form(int $salesid)
+    {
+        $sale = Sale::find($salesid);
+        $purchase = new Purchase;
+
+        $pur_all = $purchase->all()->toArray();
+
+        return view('buy', [
+            'purchase' => $pur_all,
         ]);
     }
 
@@ -47,21 +62,27 @@ class ResController extends Controller
     //登録処理
     public function create(Request $request)
     {
-        $user = new User;
+        $sale = new Sale;
 
         // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
-        $image = $request->file('image')->getClientOriginalName();
+        $picture= $request->file('picture')->getClientOriginalName();
         //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
-        $name = date('Ymd_His').'_'.$image;
-        //public/imageに画像を保存する
-        $request->file('image')->move('public/image/');
+        $pic_name = date('Ymd_His').'_'.$picture;
+        //public/pictureに画像を保存する
+        $request->file('picture')->move('public/image/', $pic_name);
         // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
-        $user->image = $image;
+        $sale->picture = $pic_name;
 
-        $user->name = $request->name;
-        $user->name = $request->name;
+        $sale->name = $request->name;
+        $sale->price = $request->price;
+        $sale->comment = $request->comment;
+        $sale->quality = $request->quality;
+
+        //ログイン中のユーザー(Auth::user)が持つ(->)収入データ(income)として(->)入力値を保存(save(データ))
+        Auth::user()->sale()->save($sale);
+        //dd($request->id);
         //DBに保存
-        $user->save();
+        //$sale->save();
         //画像をアップする画面へ戻る
         return back();
     }

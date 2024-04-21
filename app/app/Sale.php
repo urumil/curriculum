@@ -8,8 +8,14 @@ class Sale extends Model
 {
     protected $fillable = ['name', 'price', 'quality', 'comment', 'image'];
     //テーブル結合
-    public function user() {  
+    public function user() 
+    {  
         return $this->belongsTo('App\User', 'id', 'user_id');
+    }
+
+    public function like()
+    {
+        return $this->hasMany('App\Like');
     }
 
 
