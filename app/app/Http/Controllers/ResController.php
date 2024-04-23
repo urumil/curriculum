@@ -16,10 +16,13 @@ class ResController extends Controller
         //Eloquent
         //モデルのインスタンスを生成、変数に代入
         $sale = Sale::find($salesid);
+        $user = new User;
         //モデルから全レコードを取得
+        $user_all = $user->select('name')->get();
         $sale_all = $sale->all()->toArray();
 
         return view('detail', [
+            'user' => $user_all,
             'sale' => $sale_all,
         ]);
     }
@@ -30,10 +33,27 @@ class ResController extends Controller
         $sale = Sale::find($salesid);
         $purchase = new Purchase;
 
-        $pur_all = $purchase->all()->toArray();
+        $sale_all = $sale->all()->toArray();
+        // $pur_all = $purchase->all()->toArray();
 
         return view('buy', [
-            'purchase' => $pur_all,
+            'sale' => $sale_all,
+            'purchase' => $purchase,
+        ]);
+    }
+
+    //購入確認画面
+    public function check_form(int $salesid)
+    {
+        $sale = Sale::find($salesid);
+        $purchase = new Purchase;
+
+        $sale_all = $sale->all()->toArray();
+        // $pur_all = $purchase->all()->toArray();
+
+        return view('check', [
+            'sale' => $sale_all,
+            'purchase' => $purchase,
         ]);
     }
 
@@ -68,7 +88,7 @@ class ResController extends Controller
         $picture= $request->file('picture')->getClientOriginalName();
         //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
         $pic_name = date('Ymd_His').'_'.$picture;
-        //public/pictureに画像を保存する
+        //public/imageに画像を保存する
         $request->file('picture')->move('public/image/', $pic_name);
         // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
         $sale->picture = $pic_name;

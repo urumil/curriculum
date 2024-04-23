@@ -3,6 +3,7 @@
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\ResController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\LikeController;
 
 
 /*
@@ -39,24 +40,32 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/mypage_edit/{id}', [MypageController::class, 'edit_form'])->name('edit');
     //マイページ画面編集処理
     Route::post('/mypage_edit/{id}', [MypageController::class, 'edit']);
-    //いいね一覧画面表示
-    Route::get('/like/{id}', [MypageController::class, 'like_form'])->name('like');
-    //いいね編集処理
-    Route::post('/like/{id}', [MypageController::class, 'like']);
+    //いいね
+    Route::get('/like/{id}', [LikeController::class, 'like'])->name('like');
+    //いいねを取り消す
+    Route::get('/unlike/{id}', [LikeController::class, 'unlike'])->name('unlike');
+    //マイページ画面表示
+    Route::get('/likegoods/{id}', [LikeController::class, 'likegoods'])->name('likegoods');
     //購入画面表示
     Route::get('/buy/{id}', [ResController::class, 'buy_form'])->name('buy');
     //購入処理
     Route::post('/buy/{id}', [ResController::class, 'buy']);
-    //購入画面表示
+    //購入確認表示
+    Route::get('/check/{id}', [ResController::class, 'check_form'])->name('check');
+    //購入確認処理
+    Route::post('/check/{id}', [ResController::class, 'check']);
+    //購入履歴画面表示
     Route::get('/buyhistory/{id}', [MypageController::class, 'buyhistory_form'])->name('buyhistory');
-    //購入処理
+    //購入履歴処理
     Route::post('/buyhistory/{id}', [MypageyController::class, 'buyhistory']);
+    //フォロー実装
+    Route::get('/follow/{id}', [MypageController::class, 'follow'])->name('follow');
     //フォロー一覧画面表示
-    Route::get('/follow/{id}', [MypageController::class, 'follow_form'])->name('follow');
-    //フォロー一覧処理
-    Route::post('/follow/{id}', [MypageyController::class, 'follow']);
-    //フォロー一覧画面表示
+    Route::get('/followuser/{id}', [MypageController::class, 'followuser'])->name('followuser');
+    //フォロー用のユーザー画面
+    Route::get('/user/{id}', [MypageController::class, 'user_form'])->name('user');
+    //売上一覧画面表示
     Route::get('/sell/{id}', [MypageController::class, 'sell_form'])->name('sell');
-    //フォロー一覧処理
+    //売上処理
     Route::post('/sell/{id}', [MypageyController::class, 'sell']);
 });

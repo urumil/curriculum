@@ -48,18 +48,18 @@ class MypageController extends Controller
     //マイページ画面編集処理
     public function edit(int $id, Request $request)
     {
+        echo $request['image'];
         $user = new User;
         $record = $user->find($id);
         
-
-        // // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
-        // $image= $request->file('image')->getClientOriginalName();
-        // //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
-        // $img_name = date('Ymd_His').'_'.$image;
-        // //public/pictureに画像を保存する
-        // $request->file('image')->move('public/image/', $img_name);
-        // // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
-        // $record->image = $img_name;
+        // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
+        $image = $request->file('image')->getClientOriginalName();
+        //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+        $img_name = date('Ymd_His').'_'.$image;
+        //storage/imagesに画像を保存する
+        $request->file('image')->move('storage/images/', $img_name);
+        // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
+        $user->image = $img_name;
 
         $record->name = $request->name;
         $record->image = $request->image;
@@ -139,23 +139,46 @@ class MypageController extends Controller
     }
 
     //フォロー一覧画面
-    public function follow_form(int $userid)
-    {
-        $follow = Auth::user()->follow()->get();
-        
-        $follow= new Follow;
+    public function followuser(int $userid)
+    {   
+        $follow = new Follow;
+        $user = new User;
 
         $follow_all = $follow->all()->toArray();
+        $user_all = $user->all()->toArray();
 
         return view('follow', [
             'follow' => $follow_all,
+            'user' => $user_all,
         ]);
     }
 
-    //フォロー一覧画面
-    public function follow(int $userid)
+    //フォロー実装
+    public function follow(int $userid, Request $request)
     {
-        //
+        $follow = new Follow;
+
+        $follow->user_id = Auth::user()->id;
+        $follow->follow_id = $userid;
+        $follow->save();
+        return back();
+    }
+
+    //フォロー用ユーザー画面
+    public function user_form(int $userid)
+    {
+        //Eloquent
+        //モデルのインスタンスを生成、変数に代入
+        $user = new User;
+        $sale = new Sale;
+
+        $user_all = $user->all()->toArray();
+        $sale_all = $sale->all()->toArray();
+
+        return view('user', [
+            'user' => $user_all,
+            'sale' => $sale_all,
+        ]);
     }
 
     //売上一覧画面

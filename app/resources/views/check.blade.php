@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-center">購入画面</h1>
+<h1 class="text-center">確認画面</h1>
 @foreach($sale as $sales)
 <img src="{{ asset('image/' . $sales['picture']) }}" alt="{{ $sales['picture'] }}" class="rounded mx-auto d-block">
 <div class="card-body">

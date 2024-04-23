@@ -15,6 +15,7 @@ class AddUserIdFollows extends Migration
     {
         Schema::table('follows', function (Blueprint $table) {
             $table->integer('user_id');
+            $table->integer('follow_id');
         });
     }
 

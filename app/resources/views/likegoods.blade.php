@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<h1>いいね商品一覧</h1>
 <div class="container">
    <div class="container text-center">
         <div class="d-flex justify-content-center">
@@ -16,4 +17,5 @@
         </div>
     </div>
 </div>
+
 @endsection
