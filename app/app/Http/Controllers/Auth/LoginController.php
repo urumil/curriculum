@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use App\Sale;
+use App\User;
+use App\Purchase;
+
 class LoginController extends Controller
 {
     /*
@@ -26,7 +30,17 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected function redurectTo()
+    {
+        $admin_flag = $this->gurad()->user()->group;
+        if($admin_flag == 0)
+        {
+            return '/admin';
+        } else {
+            return '/user';
+        }
+    }
 
     /**
      * Create a new controller instance.

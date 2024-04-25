@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('image')->nullable();
             $table->string('profile', '300')->nullable();
-            $table->integer('group')->default(1);
+            $table->boolean('group')->default(1);
             $table->boolean('stop_flg')->nullable();
             $table->timestamps();
         });
