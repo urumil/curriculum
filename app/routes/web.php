@@ -36,6 +36,10 @@ Route::group(['middleware' => 'auth'], function() {
 
     //一般ユーザー
     //Route::group(['middleware' => 'can:view,user'], function() {
+        //ホーム画面表示
+        Route::get('/', [DisplayController::class, 'index']);
+        //出品商品の詳細画面
+        Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('detail');
         //マイページ画面表示
         Route::get('/mypage/{id}', [MypageController::class, 'index'])->name('mypage');
         //出品商品登録画面表示
@@ -79,6 +83,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     //管理者用
     Route::group(['middleware' => 'can:view,admin'], function() {
-        
+        //ホーム画面表示
+        Route::get('/', [DisplayController::class, 'index']);
     });
 });
