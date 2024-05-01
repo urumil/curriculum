@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
-    protected $fillable = ['name', 'price', 'quality', 'comment', 'image'];
+    protected $fillable = [
+        'name', 'price', 'quality', 'comment', 'image',
+    ];
+
     //テーブル結合
     public function user() 
     {  
@@ -17,6 +20,4 @@ class Sale extends Model
     {
         return $this->hasMany('App\Like');
     }
-
-
 }

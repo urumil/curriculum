@@ -22,12 +22,14 @@ class DisplayController extends Controller
         //モデルのインスタンスを生成、変数に代入
         $sale = new Sale;
         //モデルから全レコードを取得
-        $sale_all = $sale->all()->toArray();
+        // $sale_all = $sale->all()->toArray();
+        //最新順に並べる
+        $sale = Sale::latest()->get();
         
         //var_dump($sale_all);
 
         return view('home', [
-            'sale' => $sale_all,
+            'sale' => $sale,
         ]);
     }
 

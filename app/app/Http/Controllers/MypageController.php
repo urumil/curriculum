@@ -15,18 +15,15 @@ class MypageController extends Controller
     //マイページ画面
     public function index(int $userid)
     {
-        $user = Auth::user()->sale()->get();
-        //Eloquent
-        //モデルのインスタンスを生成、変数に代入
         $user = new User;
         $sale = new Sale;
 
-        $user_all = $user->all()->toArray();
-        $sale_all = $sale->all()->toArray();
+        $user = Auth::user()->get();
+        $sale = Auth::user()->sale()->get();
 
         return view('mypage', [
-            'user' => $user_all,
-            'sale' => $sale_all,
+            'user' => $user,
+            'sale' => $sale,
         ]);
     }
 
@@ -70,6 +67,17 @@ class MypageController extends Controller
         return view('mypage', ['id' => Auth::user()->id]);
 
     }
+
+    //退会（論理削除）
+    public function delete_form(int $userid)
+    {
+        $user = Auth::user()->sale();
+        $user->delete();
+        Auth::logout();
+        return redirect('login');
+
+    }
+
 
     //いいね商品一覧画面表示
     public function like_form(int $userid) 
@@ -139,17 +147,21 @@ class MypageController extends Controller
     }
 
     //フォロー一覧画面
-    public function followuser(int $userid)
+    public function followuser(int $id)
     {   
         $follow = new Follow;
-        $user = new User;
 
-        $follow_all = $follow->all()->toArray();
-        $user_all = $user->all()->toArray();
+        $follow_all = Auth::user()->follow()->get();
+        $user = Auth::user()->get();
+
+        // $follow_all = ;
+        // $user_all = $user->all()->toArray();
+
+       //$follow = Follow::
 
         return view('follow', [
             'follow' => $follow_all,
-            'user' => $user_all,
+            'user' => $user,
         ]);
     }
 

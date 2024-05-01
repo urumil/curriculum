@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Like;
 use App\Sale;
 use App\User;
 use App\Purchase;
@@ -11,19 +12,31 @@ use App\Purchase;
 class ResController extends Controller
 {
    //出品詳細
-   public function saleDetail(int $salesid) 
+   public function saleDetail(int $id) 
    {
         //Eloquent
         //モデルのインスタンスを生成、変数に代入
-        $sale = Sale::find($salesid);
+        $sale = Sale::find($id);
         $user = new User;
+        $like = new Like;
         //モデルから全レコードを取得
         $user_all = $user->select('name')->get();
-        $sale_all = $sale->all()->toArray();
+        $sale_all = $sale->all();
+
+        $data = [];
+        // ユーザの投稿の一覧を作成日時の降順で取得
+        //withCount('テーブル名')とすることで、リレーションの数も取得できます。
+        //$sales = Sale::withCount('likes')->orderBy('created_at', 'desc')->paginate(10);
+
+        $data = [
+                'sale' => $sale,
+                'like'=> $like,
+            ];
 
         return view('detail', [
             'user' => $user_all,
             'sale' => $sale_all,
+            $data,
         ]);
     }
 
@@ -104,7 +117,7 @@ class ResController extends Controller
         //DBに保存
         //$sale->save();
         //画像をアップする画面へ戻る
-        return back();
+        return redirect('/');
     }
 
     /**

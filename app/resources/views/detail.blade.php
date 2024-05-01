@@ -21,10 +21,9 @@
       <button type='submit' class='btn btn-primary w-25 mt-3'>いいね</button>
     </div> 
   </form>
-
-    <div class="grid text-center">
-      <a class="btn btn-primary" href="{{ route('buy', ['id' => $sales['id']]) }}" role="button">購入</a>
-    </div>
+  <div class="grid text-center">
+    <a class="btn btn-primary" href="{{ route('buy', ['id' => $sales['id']]) }}" role="button">購入</a>
+  </div>
 @endforeach  
 
 @endsection

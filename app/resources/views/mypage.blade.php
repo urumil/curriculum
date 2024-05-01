@@ -15,7 +15,13 @@
   </div>
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <a href="{{ route('edit' , ['id' => $users['id']]) }}" class="nav-link" >編集</a>
-    <a href="{{ route('register') }}" class="nav-link" >退会</a>
+    <a href="{{ route('delete' , ['id' => $users['id']]) }}" class="nav-link" 
+    onclick="confirm('本当に退会しますか？');
+    event.preventDefault();
+    document.getElementById('delete_form').submit();">退会</a>
+    <form id="delete_form" action="{{ route('delete' , ['id' => $users['id']]) }}" method="get" style="display: none;">
+      {{ csrf_field() }}
+    </form>
   </div>
 @endforeach
 <hr class="border border-dark border-3 opacity-75">
@@ -26,19 +32,18 @@
   <a class="btn btn-primary" href="{{ route('followuser' , ['id' => $users['id']]) }}" role="button">フォロー一覧</a>
   <a class="btn btn-primary" href="{{ route('sell' , ['id' => $users['id']]) }}" role="button">売上履歴</a>
 </div>
-<div class="container">
-  <div class="container text-center">
-    <div class="d-flex justify-content-center">
-      @foreach($sale as $sales)
-        <div class="card" style="width: 18rem;">
-          <img src="{{ asset('public/image/' . $sales['picture']) }}" class="card-img-top" alt="sales_picture" width="210" height="210">
-          <div class="card-body">
-            <h5 class="card-title">{{ $sales['price'] }}円</h5>
-            <a href="{{ route('detail', ['id' => $sales['id']]) }}" class="btn btn-primary">詳細</a>
-          </div>
+<br>
+<div class="container text-center">
+  <div class="justify-content-center">
+    @foreach($sale as $sales)
+    <div class="card" style="width:30rem;height:35rem">
+        <img src="{{ asset('public/image/' . $sales['picture']) }}" class="card-img-top" alt="sales_picture" width="auto" height="400">
+        <div class="card-body">
+          <h5 class="card-title">{{ $sales['price'] }}円</h5>
+          <a href="{{ route('detail', ['id' => $sales['id']]) }}" class="btn btn-primary">詳細</a>
         </div>
-      @endforeach
-    </div>
+      </div>
+    @endforeach
   </div>
 </div>
 @endsection
