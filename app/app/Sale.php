@@ -13,11 +13,18 @@ class Sale extends Model
     //テーブル結合
     public function user() 
     {  
-        return $this->belongsTo('App\User', 'id', 'user_id');
+        return $this->belongsTo('App\User');
     }
 
     public function like()
     {
         return $this->hasMany('App\Like');
+    }
+
+    //プルダウン検索機能にて使用
+    public function pricelist()
+    {
+        $pricelist = Sale::pluck('price');
+        return $pricelist;
     }
 }

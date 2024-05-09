@@ -14,59 +14,85 @@ class ResController extends Controller
    //出品詳細
    public function saleDetail(int $id) 
    {
-        //Eloquent
-        //モデルのインスタンスを生成、変数に代入
-        $sale = Sale::find($id);
-        $user = new User;
-        $like = new Like;
-        //モデルから全レコードを取得
-        $user_all = $user->select('name')->get();
-        $sale_all = $sale->all();
+        $sale = Sale::with('user')->where('id', $id)->first();
+        // //$like = new Like;
+    
+        // $data = [];
+        // // ユーザの投稿の一覧を作成日時の降順で取得
+        // //withCount('テーブル名')とすることで、リレーションの数も取得できます。
+        // //$sales = Sale::withCount('likes')->orderBy('created_at', 'desc')->paginate(10);
 
-        $data = [];
-        // ユーザの投稿の一覧を作成日時の降順で取得
-        //withCount('テーブル名')とすることで、リレーションの数も取得できます。
-        //$sales = Sale::withCount('likes')->orderBy('created_at', 'desc')->paginate(10);
+        // $data = [
+        //         'sale' => $sale,
+        //         'like'=> $like,
+        //     ];
 
-        $data = [
-                'sale' => $sale,
-                'like'=> $like,
-            ];
-
+        //var_dump($sale);
         return view('detail', [
-            'user' => $user_all,
-            'sale' => $sale_all,
-            $data,
+            'sale' => $sale,
         ]);
     }
 
     //購入画面
-    public function buy_form(int $salesid)
+    public function buy(int $id, Request $request)
     {
-        $sale = Sale::find($salesid);
-        $purchase = new Purchase;
-
-        $sale_all = $sale->all()->toArray();
-        // $pur_all = $purchase->all()->toArray();
+        $sale = Sale::with('user')->where('id', $id)->first();
 
         return view('buy', [
-            'sale' => $sale_all,
-            'purchase' => $purchase,
+            'sale' => $sale,
+            'request' => $request,
         ]);
     }
-
-    //購入確認画面
-    public function check_form(int $salesid)
+    //確認画面
+    public function confirm(int $id, Request $request)
     {
-        $sale = Sale::find($salesid);
-        $purchase = new Purchase;
+        $sale = Sale::with('user')->where('id', $id)->first();
+        //セッションに書き込む
+        $contact = $request->all();
+        $request->session()->put('contact', $contact);
 
-        $sale_all = $sale->all()->toArray();
-        // $pur_all = $purchase->all()->toArray();
-
+        //var_dump($contact);
         return view('check', [
-            'sale' => $sale_all,
-            'purchase' => $purchase,
+            'sale' => $sale,
+            'contact' => $contact,
+        ]); 
+    }
+
+    //完了画面
+    public function send(int $id, Request $request)
+    {
+        $sale = Sale::with('user')->where('id', $id)->first();
+        //セッションに書き込む
+        //$contact = $request->all();
+        $val = $request->session()->get('contact');
+
+        //var_dump($val);
+
+        $purchases = new Purchase;
+        $purchases = $val;
+        var_dump($purchases);
+        //$purchase->fill($val)->save();
+        //$purchase->save($purchases);
+        Auth::user()->purchase()->save($purchases);
+        
+        return view('thanks', compact('purchases'));
+    }
+
+    //購入一覧画面
+    public function buyhistory_form(int $id)
+    {
+        // $user = new User;
+        // $purchases = new Purchases;
+        // $sale = new Sale;
+
+        // $purchases = Auth::user()->purchases()->get();
+        // $sale = Auth::user()->sale()->get();
+        // $user = Auth::user()->get();
+
+        return view('buyhistory', [
+            'purchases' => $purchases,
+            'sale' => $sale,
+            'user' => $user,
         ]);
     }
 

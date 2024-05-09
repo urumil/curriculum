@@ -1,13 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+
+@can('general')
 <div>
-    <form action="{{ route('search') }}" method="get">
-        <input type="text" name="keyword" value="{{ $keyword }}" placeholder="キーワードを入力">
-        <button type="submit">検索</button>
-        <button>
-            <a href="{{ route('search') }}" >クリア</a>
-        </button>
+    <form action="/" method="get">
+    @csrf
+        <div class="row justify-content-around">
+            <div class="col-md-4">
+                <div class="card">
+                    <input type="text" name="keyword" value="{{ $keyword }}" placeholder="キーワードを入力">
+                </div>
+                <table class='table'>
+                    <select name="pricelist" value="{{ $pricelist }}" class="form-control">
+                        <option value="">未選択</option>
+                        <option value="{{ $pricelist }}" name="pricelist">0〜999</option>
+                        <option value="">1,000〜4,999</option>
+                        <option value="">5,000〜9,999</option>
+                        <option value="">10,000〜</option>
+                </table>
+                <button type="submit">検索</button>
+                <button>
+                    <a href="/" >クリア</a>
+                </button>
+            </div>
+        </div>
     </form>
 </div>
 <br>
@@ -26,4 +43,6 @@
         </div>
     </div>
 </div>
+@endcan
+
 @endsection

@@ -149,19 +149,16 @@ class MypageController extends Controller
     //フォロー一覧画面
     public function followuser(int $id)
     {   
-        $follow = new Follow;
+        // $follow = new Follow;
 
-        $follow_all = Auth::user()->follow()->get();
-        $user = Auth::user()->get();
+        // $follow_all = Auth::user()->follow()->get();
+        // $user = Auth::user()->get();
 
-        // $follow_all = ;
-        // $user_all = $user->all()->toArray();
-
-       //$follow = Follow::
+        $follow = Follow::with('user')->where('id', $id)->first();
 
         return view('follow', [
-            'follow' => $follow_all,
-            'user' => $user,
+            'follow' => $follow,
+            //'user' => $user,
         ]);
     }
 
@@ -177,19 +174,14 @@ class MypageController extends Controller
     }
 
     //フォロー用ユーザー画面
-    public function user_form(int $userid)
+    public function user_form(int $id)
     {
-        //Eloquent
-        //モデルのインスタンスを生成、変数に代入
-        $user = new User;
-        $sale = new Sale;
-
-        $user_all = $user->all()->toArray();
-        $sale_all = $sale->all()->toArray();
+        $user = User::find($id);
+        $sale = Sale::find($id);
 
         return view('user', [
-            'user' => $user_all,
-            'sale' => $sale_all,
+            'user' => $user,
+            'sale' => $sale,
         ]);
     }
 
