@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
@@ -27,4 +28,7 @@ class Sale extends Model
         $pricelist = Sale::pluck('price');
         return $pricelist;
     }
+
+    //物理削除
+    use SoftDeletes;
 }

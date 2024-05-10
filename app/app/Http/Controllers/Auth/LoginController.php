@@ -33,13 +33,13 @@ class LoginController extends Controller
     //protected $redirectTo = RouteServiceProvider::HOME;
     protected function redurectTo()
     {
-        $admin_flag = $this->gurad()->user()->group;
-        if($admin_flag == 0)
-        {
-            return '/admin';
-        } else {
-            return '/user';
-        }
+        // $admin_flag = $this->gurad()->user()->group;
+        // if($admin_flag == 0)
+        // {
+        //     return '/admin';
+        // } else {
+        //     return '/user';
+        // }
     }
 
     /**

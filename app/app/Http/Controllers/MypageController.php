@@ -15,10 +15,7 @@ class MypageController extends Controller
     //マイページ画面
     public function index(int $userid)
     {
-        $user = new User;
-        $sale = new Sale;
-
-        $user = Auth::user()->get();
+        $user = User::find($userid);
         $sale = Auth::user()->sale()->get();
 
         return view('mypage', [
@@ -45,18 +42,17 @@ class MypageController extends Controller
     //マイページ画面編集処理
     public function edit(int $id, Request $request)
     {
-        echo $request['image'];
         $user = new User;
         $record = $user->find($id);
         
-        // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
-        $image = $request->file('image')->getClientOriginalName();
-        //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
-        $img_name = date('Ymd_His').'_'.$image;
-        //storage/imagesに画像を保存する
-        $request->file('image')->move('storage/images/', $img_name);
-        // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
-        $user->image = $img_name;
+        // // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
+        // $image = $request->file('image')->getClientOriginalName();
+        // //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+        // $img_name = date('Ymd_His').'_'.$image;
+        // //storage/imagesに画像を保存する
+        // $request->file('image')->move('storage/images/', $img_name);
+        // // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
+        // $user->image = $img_name;
 
         $record->name = $request->name;
         $record->image = $request->image;
@@ -149,17 +145,14 @@ class MypageController extends Controller
     //フォロー一覧画面
     public function followuser(int $id)
     {   
-        // $follow = new Follow;
-
-        // $follow_all = Auth::user()->follow()->get();
-        // $user = Auth::user()->get();
-
-        $follow = Follow::with('user')->where('id', $id)->first();
+        //$follow = Follow::with('user')->where('id', $id)->get();
+        $follow = Follow::with('user:id')->get();
 
         return view('follow', [
             'follow' => $follow,
             //'user' => $user,
         ]);
+        
     }
 
     //フォロー実装
@@ -176,8 +169,10 @@ class MypageController extends Controller
     //フォロー用ユーザー画面
     public function user_form(int $id)
     {
-        $user = User::find($id);
-        $sale = Sale::find($id);
+        $user = User::with('sale')->where('id', $id)->first();
+        $sale = $user->sale()->get();
+
+        //var_dump($sale);
 
         return view('user', [
             'user' => $user,

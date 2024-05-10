@@ -22,6 +22,7 @@ class CreateSalesTable extends Migration
             $table->integer('quality');
             $table->boolean('del_flg')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

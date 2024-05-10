@@ -6,7 +6,7 @@ use App\Http\Controllers\MypageController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\AdminController;
 
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 
 use App\Sale;
 use App\User;
@@ -97,8 +97,16 @@ Route::group(['middleware' => 'auth'], function() {
     
 
     //管理者用
-    Route::group(['middleware' => ['auth', 'can:admin']], function() {
+    //Route::group(['middware' => ['auth', 'can:admin']], function() {
         //ホーム画面表示（ユーザーリスト）
-        Route::get('/', [AdminController::class, 'showAdminPage']);
-    });
+        //Route::get('/', [AdminController::class, 'showAdminPage']);
+        //管理者用ユーザー詳細画面
+        //Route::get('/admuser/{id}', [AdminController::class, 'showUserPage'])->name('admuser');
+        //管理者用出品商品詳細画面
+        //Route::get('/admsale/{id}', [AdminController::class, 'showSalePage'])->name('admsale');
+        //出品商品の非表示（論理削除）
+        //Route::get('/softdelete_sale/{id}', [AdminController::class, 'softdel_form'])->name('softdelete_sale');
+        //出品商品の復元
+        //Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('restore');
+    //});
 });
