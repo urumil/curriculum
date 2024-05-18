@@ -22,6 +22,11 @@ class Sale extends Model
         return $this->hasMany('App\Like');
     }
 
+    public function purchase()
+    {
+        return $this->hasMany('App\Purchase', 'sales_id', 'id');
+    }
+
     //プルダウン検索機能にて使用
     public function pricelist()
     {

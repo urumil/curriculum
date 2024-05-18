@@ -129,28 +129,29 @@ class MypageController extends Controller
     }
 
     //購入履歴一覧画面
-    public function buyhistory_form(int $userid)
+    public function buyhistory_form(int $id)
     {
-        $buyhistory = Auth::user()->purchase()->get();
-        
-        $buyhistory = new Purchase;
+        //$purchase = Purchase::with('sale:id,picture,price')->get();
+        //$purchase = Auth::user()->purchase()->get();
+        //$purchase = Sale::with('purchase:sales_id')->get();
+        $purchase = Purchase::with('sale')->where('id', $id)->first();
+        $sale = $purchase->sale()->get();
 
-        $buyhistory_all = $buyhistory->all()->toArray();
+        
+        var_dump($purchase);
 
         return view('buyhistory', [
-            'buyhistory' => $buyhistory_all,
+            'purchase' => $purchase,
         ]);
     }
 
     //フォロー一覧画面
     public function followuser(int $id)
     {   
-        //$follow = Follow::with('user')->where('id', $id)->get();
-        $follow = Follow::with('user:id')->get();
+        $follow = Auth::user()->follow()->get();
 
         return view('follow', [
             'follow' => $follow,
-            //'user' => $user,
         ]);
         
     }

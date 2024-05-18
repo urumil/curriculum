@@ -9,26 +9,33 @@
   <img src="{{ $sale->user->image }}" class="img-thumbnail" alt="ユーザー画像">{{ $sale->user->name }}
 </div>
 <div class="card-body">
-    <form action="{{ route('send') }}" method="post" enctype="multipart/form-data"> 
+    <form action="{{ route('send', ['id' => $id]) }}" method="post" enctype="multipart/form-data"> 
         @csrf
+        <input type='hidden' name='name' value="{{ $contact['name'] }}">
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">氏名</label>
           <div class="col-sm-10">
             {{ $contact['name'] }}
           </div>
         </div>
+        
+        <input type='hidden' name='tel' value="{{ $contact['tel'] }}">
         <div class="form-group row">
           <label for="tel" class="col-sm-2 col-form-label">電話番号</label>
           <div class="col-sm-10">
             {{ $contact['tel'] }}
           </div>
         </div>
+
+        <input type='hidden' name='postcard' value="{{ $contact['postcard'] }}">
         <div class="form-group row">
           <label for="postcard" class="col-sm-2 col-form-label">郵便番号</label>
           <div class="col-sm-10">
             {{ $contact['postcard'] }}
           </div>
         </div>
+
+        <input type='hidden' name='address' value="{{ $contact['address'] }}">
         <div class="form-group row">
           <label for="address" class="col-sm-2 col-form-label">住所</label>
           <div class="col-sm-10">

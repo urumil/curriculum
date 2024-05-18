@@ -55,6 +55,7 @@ class ResController extends Controller
         return view('check', [
             'sale' => $sale,
             'contact' => $contact,
+            'id' => $id,
         ]); 
     }
 
@@ -63,19 +64,18 @@ class ResController extends Controller
     {
         $sale = Sale::with('user')->where('id', $id)->first();
         //セッションに書き込む
-        //$contact = $request->all();
         $val = $request->session()->get('contact');
 
-        //var_dump($val);
+        $purchase = new Purchase;
+        // $valのデータを$purchaseにフィルイン
+        $purchase->fill($val);
+        //saleからデータを引っ張る
+        $purchase->good = $sale->name;
+        $purchase->sales_id = $sale->id;
 
-        $purchases = new Purchase;
-        $purchases = $val;
-        var_dump($purchases);
-        //$purchase->fill($val)->save();
-        //$purchase->save($purchases);
-        Auth::user()->purchase()->save($purchases);
+        Auth::user()->purchase()->save($purchase);
         
-        return view('thanks', compact('purchases'));
+        return view('thanks', compact('purchase'));
     }
 
     //購入一覧画面

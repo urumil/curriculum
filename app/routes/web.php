@@ -37,6 +37,18 @@ Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('det
 
 //ログインもしくは会員登録してから表示可能
 Route::group(['middleware' => 'auth'], function() {
+    
+    //パスワードリセット
+    //パスワード再設定用のメール送信フォーム
+    Route::get('/reset', [ResetController::class, 'requestReset'])->name('reset');
+    //メール送信処理
+    Route::post('/send', [ResetController::class, 'sendResetMail'])->name('sendmail');
+    //メール送信完了
+    Route::get('/complete', [ResetController::class, 'completeReset'])->name('complete');
+    //パスワード再設定
+    Route::get('/password_edit', [ResetController::class, 'resetPassword'])->name('passwordedit');
+    //パスワード更新
+    Route::post('/password_update', [ResetController::class, 'updatePassword'])->name('passwordupdate');
 
     //一般ユーザー
     Route::group(['middleware' => ['auth', 'can:general']], function() {
@@ -74,7 +86,7 @@ Route::group(['middleware' => 'auth'], function() {
         //確認処理
         Route::post('/check/{id}', [ResController::class, 'confirm'])->name('confirm');
         //完了画面
-        Route::post('/thanks', [ResController::class, 'send'])->name('send');
+        Route::post('/thanks/{id}', [ResController::class, 'send'])->name('send');
 
         //購入履歴画面表示
         Route::get('/buyhistory/{id}', [MypageController::class, 'buyhistory_form'])->name('buyhistory');

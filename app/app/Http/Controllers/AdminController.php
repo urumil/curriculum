@@ -30,7 +30,9 @@ class AdminController extends Controller
         $user = User::with('sale')->where('id', $id)->first();
         $sale = $user->sale()->get();
         //論理削除済みのものを取得
-        $delete = Sale::onlyTrashed()->get();
+        //$delete = Sale::onlyTrashed()->get();
+        //$delete = Auth::user()->sale()->onlyTrashed()->get();
+        $delete = $user->sale()->onlyTrashed()->get();
 
         //var_dump($sale);
 
