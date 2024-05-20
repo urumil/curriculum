@@ -38,18 +38,6 @@ Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('det
 //ログインもしくは会員登録してから表示可能
 Route::group(['middleware' => 'auth'], function() {
     
-    //パスワードリセット
-    //パスワード再設定用のメール送信フォーム
-    Route::get('/reset', [ResetController::class, 'requestReset'])->name('reset');
-    //メール送信処理
-    Route::post('/send', [ResetController::class, 'sendResetMail'])->name('sendmail');
-    //メール送信完了
-    Route::get('/complete', [ResetController::class, 'completeReset'])->name('complete');
-    //パスワード再設定
-    Route::get('/password_edit', [ResetController::class, 'resetPassword'])->name('passwordedit');
-    //パスワード更新
-    Route::post('/password_update', [ResetController::class, 'updatePassword'])->name('passwordupdate');
-
     //一般ユーザー
     Route::group(['middleware' => ['auth', 'can:general']], function() {
         //ホーム画面表示
@@ -109,16 +97,20 @@ Route::group(['middleware' => 'auth'], function() {
     
 
     //管理者用
-    //Route::group(['middware' => ['auth', 'can:admin']], function() {
+    Route::group(['middware' => ['auth', 'can:admin']], function() {
         //ホーム画面表示（ユーザーリスト）
         //Route::get('/', [AdminController::class, 'showAdminPage']);
         //管理者用ユーザー詳細画面
-        //Route::get('/admuser/{id}', [AdminController::class, 'showUserPage'])->name('admuser');
+        Route::get('/admuser/{id}', [AdminController::class, 'showUserPage'])->name('admuser');
         //管理者用出品商品詳細画面
-        //Route::get('/admsale/{id}', [AdminController::class, 'showSalePage'])->name('admsale');
+        Route::get('/admsale/{id}', [AdminController::class, 'showSalePage'])->name('admsale');
         //出品商品の非表示（論理削除）
-        //Route::get('/softdelete_sale/{id}', [AdminController::class, 'softdel_form'])->name('softdelete_sale');
+        Route::get('/softdelete_sale/{id}', [AdminController::class, 'softdel_sale'])->name('softdelete_sale');
         //出品商品の復元
-        //Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('restore');
-    //});
+        Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('restore');
+        //ユーザーの利用停止（論理削除）
+        Route::get('/softdelete_user/{id}', [AdminController::class, 'softdel_user'])->name('softdelete_user');
+        //利用停止中ユーザーの復元
+        Route::get('/restore_user/{id}', [AdminController::class, 'restore_user'])->name('restore_user');
+    });
 });

@@ -6,7 +6,7 @@
 <div class="card-body">
   <p class="card-text">商品名　　{{ $sale->name }}</p>
   <p class="card-text">価格　　{{ $sale->price }}円</p>
-  <img src="{{ $sale->user->image }}" class="img-thumbnail" alt="ユーザー画像">{{ $sale->user->name }}
+  <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="img-thumbnail" alt="ユーザー画像">{{ $sale->user->name }}
 </div>
 <div class="card-body">
   <form method="post" action="{{ route('confirm', ['id' => $sale->id]) }}">

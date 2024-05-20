@@ -4,7 +4,7 @@
 <div class="container text-center">
   <div class="row justify-content-center">
     <div class="col-4">
-      <img src="{{ asset('storage/images/' . $user['image']) }}" class="img-thumbnail" alt="ユーザー画像" value="{{ $user['image'] }}" >
+      <img src="{{ asset('public/image/' . $user['image']) }}" class="img-thumbnail" alt="ユーザー画像" value="{{ $user['image'] }}" >
     </div>
     <div class="col-4">
       <p class="h5">{{ $user['name'] }}</p>

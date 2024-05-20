@@ -28,6 +28,7 @@ class ResController extends Controller
         //     ];
 
         //var_dump($sale);
+        
         return view('detail', [
             'sale' => $sale,
         ]);

@@ -6,7 +6,7 @@
 <div class="container text-center">
   <div class="row justify-content-center">
     <div class="col-4">
-      <img src="{{ asset('storage/images/' . $user->image) }}" class="img-thumbnail" alt="ユーザー画像" value="{{ $user->image }}" >
+      <img src="{{ asset('public/image/' . $user['image']) }}" class="img-thumbnail" alt="ユーザー画像" value="{{ $user->image }}" >
     </div>
     <div class="col-4">
       <p class="h5">{{ $user->name }}</p>
@@ -16,7 +16,7 @@
 </div>
 <form action="" method="get" enctype="multipart/form-data"> 
   <div class='row justify-content-center'>
-    <button type='submit' class='btn btn-primary w-25 mt-3'>利用停止</button>
+    <a href="{{ route('softdelete_user', ['id' => $user['id']]) }}" class="btn btn-primary">利用停止</a>
   </div>
 </form>
 

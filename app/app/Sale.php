@@ -34,6 +34,6 @@ class Sale extends Model
         return $pricelist;
     }
 
-    //物理削除
+    //論理削除
     use SoftDeletes;
 }

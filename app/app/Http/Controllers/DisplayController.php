@@ -22,9 +22,7 @@ class DisplayController extends Controller
         //Eloquent
         //モデルのインスタンスを生成、変数に代入
         $sale = new Sale;
-        //モデルから全レコードを取得
-        // $sale_all = $sale->all()->toArray();
-        
+       
         //キーワード検索
         if (isset($request->keyword)) 
         {
@@ -57,5 +55,6 @@ class DisplayController extends Controller
             'pricelist' => $request->pricelist,
         ]);
     }
+
 
 }

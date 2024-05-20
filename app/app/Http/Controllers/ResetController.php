@@ -8,35 +8,35 @@ use App\Mail\PasswordResetEmail;
 
 class ResetController extends Controller
 {
-    //　パスワード再設定用のメール送信フォーム
-    public function requestReset()
-    {
-        return view('users.reset_input_mail');
-    }
+    // //　パスワード再設定用のメール送信フォーム
+    // public function requestReset()
+    // {
+    //     return view('users.reset_input_mail');
+    // }
 
-    //  メール送信 
-    public function sendResetMail(Request $request)
-    {
-        return redirect()->route('reset.send.complete');
-    }
+    // //  メール送信 
+    // public function sendResetMail(Request $request)
+    // {
+    //     return redirect()->route('reset.send.complete');
+    // }
 
-    // メール送信完了
-    public function completeReset()
-    {
-        return view('users.reset_input_mail_complete');
-    }
+    // // メール送信完了
+    // public function completeReset()
+    // {
+    //     return view('users.reset_input_mail_complete');
+    // }
 
-    // パスワード再設定
-    public function resetPassword(Request $request)
-    {
-        return view('users.reset_input_password');
-    }
+    // // パスワード再設定
+    // public function resetPassword(Request $request)
+    // {
+    //     return view('users.reset_input_password');
+    // }
 
-    // パスワード更新
-    public function updatePassword(Request $request)
-    {
-        return view('users.reset_input_password_complete');
-    }
+    // // パスワード更新
+    // public function updatePassword(Request $request)
+    // {
+    //     return view('users.reset_input_password_complete');
+    // }
 
     // public function hoge()
     // {

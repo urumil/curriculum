@@ -12,6 +12,11 @@
                 </div>
 
                 <div class="card-body">
+                    @if(Auth::check() && Auth::user()->deleted_at !== null)
+                        <div class="alert alert-danger" role="alert">
+                            あなたのアカウントは利用停止されています。齊藤明日香に連絡してください。
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
@@ -34,7 +39,6 @@
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

@@ -16,10 +16,13 @@ class AdminController extends Controller
         //管理者以外の一般ユーザーを表示
         $user = User::where('group', '!=', 0)->get();
 
+        $user_delete = User::onlyTrashed()->get();
+
 
         //var_dump($user);
         return view('admin', [
             'user' => $user,
+            'user_delete' => $user_delete,
         ]);
     }
 
@@ -28,11 +31,13 @@ class AdminController extends Controller
     {
 
         $user = User::with('sale')->where('id', $id)->first();
-        $sale = $user->sale()->get();
+        $sale = $user->sale()->latest()->get();
+        
         //論理削除済みのものを取得
         //$delete = Sale::onlyTrashed()->get();
         //$delete = Auth::user()->sale()->onlyTrashed()->get();
         $delete = $user->sale()->onlyTrashed()->get();
+        
 
         //var_dump($sale);
 
@@ -40,6 +45,7 @@ class AdminController extends Controller
             'user' => $user,
             'sale' => $sale,
             'delete' => $delete,
+            
         ]);
 
     }
@@ -68,7 +74,7 @@ class AdminController extends Controller
     }
 
     //出品商品の非表示の処理
-    public function softdel_form(int $id)
+    public function softdel_sale(int $id)
     {
         $sale = Sale::find($id);
         $sale->fill([
@@ -86,4 +92,20 @@ class AdminController extends Controller
 
         return redirect('/');
     }
+
+    //ユーザーの利用停止の処理
+    public function softdel_user(int $id)
+    {
+        $user = User::find($id)->delete();
+        return redirect('/');
+    }
+
+    //利用停止中のユーザーの復元
+    public function restore_user(int $id)
+    {
+        User::onlyTrashed()->find($id)->restore();
+
+        return redirect('/');
+    }
+
 }

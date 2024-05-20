@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -60,7 +61,17 @@ class User extends Authenticatable
         return $this->hasMany('App\Follow');
     }
 
+    //論理削除
+    use SoftDeletes;
+    //退会されたら紐づくデータも論理削除
+    public static function boot()
+    {
+        parent::boot();
 
+        static::deleted(function ($user) {
+            $user->sale()->delete();
+        });
+    }
 
     /**
      * The attributes that are mass assignable.

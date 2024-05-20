@@ -16,7 +16,7 @@ class MypageController extends Controller
     public function index(int $userid)
     {
         $user = User::find($userid);
-        $sale = Auth::user()->sale()->get();
+        $sale = Auth::user()->sale()->latest()->get();
 
         return view('mypage', [
             'user' => $user,
@@ -45,14 +45,15 @@ class MypageController extends Controller
         $user = new User;
         $record = $user->find($id);
         
-        // // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
-        // $image = $request->file('image')->getClientOriginalName();
-        // //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
-        // $img_name = date('Ymd_His').'_'.$image;
-        // //storage/imagesに画像を保存する
-        // $request->file('image')->move('storage/images/', $img_name);
-        // // 上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
-        // $user->image = $img_name;
+        //name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
+        $image = $request->file('image')->getClientOriginalName();
+        //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+        $img_name = date('Ymd_His').'_'.$image;
+        //storage/imagesに画像を保存する
+        $request->file('image')->move('public/image/', $img_name);
+        //上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
+        //$user->image = $img_name;
+        $request->image = $img_name;
 
         $record->name = $request->name;
         $record->image = $request->image;
@@ -60,20 +61,19 @@ class MypageController extends Controller
 
         //echo $record;
         $record->save();
-        return view('mypage', ['id' => Auth::user()->id]);
+        //return view('mypage', ['id' => Auth::user()->id]);
+        return redirect('/');
 
     }
 
     //退会（論理削除）
-    public function delete_form(int $userid)
+    public function delete_form(int $id)
     {
-        $user = Auth::user()->sale();
-        $user->delete();
+        $user = User::find($id)->delete();
         Auth::logout();
         return redirect('login');
 
     }
-
 
     //いいね商品一覧画面表示
     public function like_form(int $userid) 
@@ -132,13 +132,16 @@ class MypageController extends Controller
     public function buyhistory_form(int $id)
     {
         //$purchase = Purchase::with('sale:id,picture,price')->get();
+        $purchase = Purchase::with('sale')->get();
         //$purchase = Auth::user()->purchase()->get();
         //$purchase = Sale::with('purchase:sales_id')->get();
-        $purchase = Purchase::with('sale')->where('id', $id)->first();
-        $sale = $purchase->sale()->get();
+        // $purchase = Purchase::with('sale')->where('id', $id)->first();
+        // $sale = $purchase->sale()->get();
+
+        $purchase = Auth::user()->purchase()->get();
 
         
-        var_dump($purchase);
+        //dd($purchase);
 
         return view('buyhistory', [
             'purchase' => $purchase,
