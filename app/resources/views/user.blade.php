@@ -21,19 +21,19 @@
 </form>
 
 <hr class="border border-dark border-3 opacity-75">
-<div class="container">
-  <div class="container text-center">
-    <div class="d-flex justify-content-center">
-      @foreach($sale as $sales)
-      <div class="card" style="width:30rem;height:35rem">
-          <img src="{{ asset('public/image/' . $sales['picture']) }}" class="card-img-top" alt="sales_picture" width="auto" height="400">
-          <div class="card-body">
-            <h5 class="card-title">{{ $sales['price'] }}円</h5>
-            <a href="{{ route('detail', ['id' => $sales['id']]) }}" class="btn btn-primary">詳細</a>
-          </div>
+<div class="container text-center">
+  <div class="row">
+    @foreach($sale as $sales)
+    <div class="col-sm-4 col-12 col-md-6 col-lg-4">
+      <div class="card">
+        <img src="{{ asset('public/image/' . $sales['picture']) }}" class="card-img-top" alt="sales_picture" width="auto" height="250">
+        <div class="card-body">
+          <h5 class="card-title">{{ $sales['price'] }}円</h5>
+          <a href="{{ route('detail', ['id' => $sales['id']]) }}" class="btn btn-primary">詳細</a>
         </div>
-      @endforeach
+      </div>
     </div>
+    @endforeach
   </div>
 </div>
 

@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -62,5 +63,40 @@
             @yield('content')
         </main>
     </div>
+
+    <script>
+    console.log('読み込み');
+    var like = $('.js-like-toggle');
+    console.log(like);
+    var likeSaleId;
+    console.log('読み込み2');
+    like.on('click', function() {
+      console.log('クリック');
+      var $this = $(this);
+      likeSaleId = $this.data('postid');
+      $.ajax({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/ajaxlike',
+        type: 'POST',
+        data: {
+          'sales_id': likeSaleId
+        },
+      })
+      .done(function(data) {
+        console.log('チェック');
+        $this.toggleClass('loved');
+        $this.next('.likesCount').html(data.saleLikesCount);
+      })
+      .fail(function(data, xhr, err) {
+        console.log('エラー');
+        console.log(err);
+        console.log(xhr);
+      });
+      return false;
+    });
+</script>
+
 </body>
 </html>

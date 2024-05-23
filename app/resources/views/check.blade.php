@@ -2,11 +2,11 @@
 
 @section('content')
 <h1 class="text-center">確認画面</h1>
-<img src="{{ asset('public/image/' . $sale->picture) }}" alt="{{ $sale->picture }}" class="rounded mx-auto d-block">
+<img src="{{ asset('public/image/' . $sale->picture) }}" alt="{{ $sale->picture }}" class="rounded mx-auto d-block" width="400" height="400">
 <div class="card-body">
   <p class="card-text">商品名　　{{ $sale->name }}</p>
   <p class="card-text">価格　　{{ $sale->price }}円</p>
-  <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="img-thumbnail" alt="ユーザー画像">{{ $sale->user->name }}
+  <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="rounded-circle" alt="ユーザー画像" width="85" height="85">{{ $sale->user->name }}
 </div>
 <div class="card-body">
     <form action="{{ route('send', ['id' => $id]) }}" method="post" enctype="multipart/form-data"> 
@@ -42,9 +42,13 @@
             {{ $contact['address'] }}
           </div>
         </div>
-        <div class='row justify-content-center'>
-          <button type="button" class='btn btn-primary' onClick="history.back()">戻る</button>
-          <button type='submit' class='btn btn-primary'>購入する</button>
+        <div class="row justify-content-around">
+          <div style="display:inline-flex">
+            <div class="grid text-center" style="width: 400px; margin: auto;">
+              <button type="button" class='btn btn-primary' onClick="history.back()">戻る</button>
+              <button type='submit' class='btn btn-primary'>購入する</button>
+            </div> 
+          </div> 
         </div> 
     </form>
 </div>

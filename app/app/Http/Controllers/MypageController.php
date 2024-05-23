@@ -44,19 +44,24 @@ class MypageController extends Controller
     {
         $user = new User;
         $record = $user->find($id);
-        
-        //name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
-        $image = $request->file('image')->getClientOriginalName();
-        //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
-        $img_name = date('Ymd_His').'_'.$image;
-        //storage/imagesに画像を保存する
-        $request->file('image')->move('public/image/', $img_name);
-        //上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
-        //$user->image = $img_name;
-        $request->image = $img_name;
 
+
+        if(isset($request->image)) {
+            //name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
+            $image = $request->file('image')->getClientOriginalName();
+            //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+            $img_name = date('Ymd_His').'_'.$image;
+            //storage/imagesに画像を保存する
+            $request->file('image')->move('public/image/', $img_name);
+            //上記処理にて保存した画像に名前を付け、userテーブルのimageカラムに、格納
+            //$user->image = $img_name;
+            $request->image = $img_name;
+            $record->image = $request->image;
+        } else {
+            $record->image = $record->image;
+        }
+        
         $record->name = $request->name;
-        $record->image = $request->image;
         $record->profile = $request->profile;
 
         //echo $record;
@@ -167,7 +172,16 @@ class MypageController extends Controller
         $follow->user_id = Auth::user()->id;
         $follow->follow_id = $userid;
         $follow->save();
+    
         return back();
+    }
+
+    //フォローを外す（物理削除）
+    public function del_follow(int $id)
+    {
+        $follow = Follow::find($id);
+        $follow->delete();
+        return redirect('/');
     }
 
     //フォロー用ユーザー画面
@@ -185,8 +199,134 @@ class MypageController extends Controller
     }
 
     //売上一覧画面
-    public function sell_form(int $userid)
+    public function sell_form(int $id)
     {
-        return view('sell');
+        //$purchase = Auth::user()->purchase()->get();
+        //$sell = Auth::user()->sale()->get();
+        //$sell = Purchase::with('sale')->get();
+        //$sell = Purchase::get();
+        //$sell = Purchase::with('sale')
+                //  ->where('sales_id', '=', 'id')
+                //  ->get();
+        //$sell = Sale::with('user')
+                //  ->where('user_id', '=', $id)
+                //  ->get();
+        // $sell = Purchase::with('sale')
+        //          ->where('sales_id', '=', 'id')
+        //          ->where('user_id', '=', $id)
+        //          ->get();
+        $sell = Purchase::join('sales', 'purchases.sales_id', '=', 'sales.id')
+                 ->join('users', 'sales.user_id', '=', 'users.id')
+                 ->where('users.id', '=', $id)
+                 ->get();
+        
+
+        //dd($sell);
+        return view('sell', [
+            'sell' => $sell,
+        ]);
+    }
+
+    //マイページ用出品商品詳細
+    public function saleDetail(int $id) 
+    {
+         $sale = Sale::with('user')->where('id', $id)->first();
+ 
+         return view('mysaledetail', [
+             'sale' => $sale,
+         ]);
+    }
+
+    //マイページ用出品商品詳細編集
+    public function detailedit_form(int $id)
+    {
+        $sale = Sale::with('user')->where('id', $id)->first();
+        $result = $sale->find($id);
+
+        return view('detail_edit', [
+            'sale' => $sale,
+            'id' => $id,
+            'result' => $result,
+        ]);
+    }
+
+    //確認画面
+    public function edit_check(int $id, Request $request)
+    {
+        $sale = Sale::with('user')->where('id', $id)->first();
+        $result = $sale->find($id);
+
+        //dd($request->picture);
+        //dd($result);
+
+        //dd($result);
+        if(isset($request->picture)) {
+            //name属性が'picture'のinputタグをファイル形式にして、画像を本来の名前にする
+            $picture = $request->file('picture')->getClientOriginalName();
+            //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
+            $pic_name = date('Ymd_His').'_'.$picture;
+            //storage/imagesに画像を保存する
+            $request->file('picture')->move('public/image/', $pic_name);
+            //上記処理にて保存した画像に名前を付け、salesテーブルのpictureカラムに、格納
+            $request->picture = $pic_name;
+
+            //dd($request->picture);
+            
+            //セッションに書き込む
+            $contact = $request->only('name','price','picture','quality','comment');
+            $request->session()->put('contact', $contact);
+            // $contact = $request->all();
+            // $request->session()->put('contact', $contact);
+
+        } else {
+            $contact = $request->only('name','price','quality','comment');
+            $contact_pic = $result->only('picture');
+            //dd($contact,$contact_pic);
+
+            $data = array(
+                'contact' => $contact,
+                'contact_pic' => $contact_pic,
+            );
+            //dd($data);
+            //var_dump($data);
+            
+            //$request->session()->put('data', $data);
+            session()->put('data', $data);
+            //$request->session()->put('contact', $contact);
+            //$result->session()->put('contact_pic', $contact_pic);
+            
+        }
+
+        // $contact = $request->all();
+        // dd($contact);
+        
+        return view('edit_check', [
+            'sale' => $sale,
+            'id' => $id,
+            'data' => $data
+        ]); 
+    }
+
+    //マイページ用出品商品詳細編集処理
+    public function complete(int $id, Request $request)
+    {
+        $sale = Sale::with('user')->where('id', $id)->first();
+        //$sale = new Sale;
+        $record = $sale->find($id);
+
+        $val = session()->get('data');
+
+        $record->name = $val['contact']['name'];
+        $record->price = $val['contact']['price'];
+        $record->quality = $val['contact']['quality'];
+        $record->comment = $val['contact']['comment'];
+        $record->picture = $val['contact_pic']['picture'];
+
+
+        //echo $record;
+        $record->save();
+        //return view('mypage', ['id' => Auth::user()->id]);
+        return redirect('/');
+        //return view('mypage', ['id' => Auth::user()->id]);
     }
 }

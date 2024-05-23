@@ -36,4 +36,6 @@ class Sale extends Model
 
     //論理削除
     use SoftDeletes;
+
+    
 }

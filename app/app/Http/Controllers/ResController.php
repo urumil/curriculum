@@ -15,22 +15,15 @@ class ResController extends Controller
    public function saleDetail(int $id) 
    {
         $sale = Sale::with('user')->where('id', $id)->first();
-        // //$like = new Like;
-    
-        // $data = [];
-        // // ユーザの投稿の一覧を作成日時の降順で取得
-        // //withCount('テーブル名')とすることで、リレーションの数も取得できます。
-        // //$sales = Sale::withCount('likes')->orderBy('created_at', 'desc')->paginate(10);
-
-        // $data = [
-        //         'sale' => $sale,
-        //         'like'=> $like,
-        //     ];
-
-        //var_dump($sale);
         
+        //withCount('テーブル名')とすることで、リレーションの数を取得
+        //$sales = Sale::withCount('likes');
+        $like_model = new Like;
+
         return view('detail', [
             'sale' => $sale,
+            //'like' => $like,
+            'like_model' => $like_model,
         ]);
     }
 

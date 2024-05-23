@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('パスワードの再設定') }}</div>
+                <div class="card-header">{{ __('パスワード再設定') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -16,6 +16,7 @@
 
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
+
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('メールアドレス') }}</label>
 
@@ -31,10 +32,11 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('パスワード再設定メール送信') }}
-                            </button>
-                            <button type="button" class='btn btn-primary' onClick="history.back()">戻る</button>
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('パスワード再設定メール送信') }}
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

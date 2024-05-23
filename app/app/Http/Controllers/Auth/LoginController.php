@@ -34,7 +34,7 @@ class LoginController extends Controller
                 Auth::logout(); // ログアウト
                 return redirect()->back()->with('warning', 'あなたのアカウントは利用停止されています。サポートに連絡してください。');
             }
-            return redirect()->intended('/home'); // ログイン後のリダイレクト先
+            return redirect()->intended('/'); // ログイン後のリダイレクト先
         }
         // ログインに失敗した場合の処理
         return redirect()->back()->withInput($request->only('email'))->withErrors([

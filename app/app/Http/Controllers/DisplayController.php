@@ -12,49 +12,58 @@ use Gate;
 class DisplayController extends Controller
 {
     public function index(Request $request) {
-
-        // //ログイン中ユーザー(Auth::user)が持つ(->)出品商品データ(sales)を得る(get)
-        // $sales = Auth::user()->sales()->get();
-        // $purchases = Auth::user()->purchases()->get();
-        // $likes = Auth::user()->likes()->get();
-        // $follows = Auth::user()->follows()->get();
-
+        //dd(1);
         //Eloquent
         //モデルのインスタンスを生成、変数に代入
         $sale = new Sale;
+
+        $keyword = $request->input('keyword'); //キーワードの値
+        $pricelist = $request->input('pricelist'); //価格の値
        
+        //$query = Sale::query();
         //キーワード検索
-        if (isset($request->keyword)) 
+        if (isset($keyword))
         {
-            $sale = Sale::where('name', $request->keyword)
-                ->orWhere('comment', $request->keyword)
+            $sale = Sale::where('name', 'LIKE', "%{$keyword}%")
+                ->orWhere('comment', 'LIKE', "%{$keyword}%")
                 ->get();
         } else {
             //最新順に並べる
             $sale = Sale::latest()->get();
         }
 
-        // $sale = new Sale;
-        // //Saleモデルで定義した関数を呼び出す
-        // $pricelist = $sale->pricelist();
-
         //プルダウン価格検索
-        if (isset($request->pricelist)) 
-        {
-            $sale = Sale::where('price', $request->pricelist)
-                        ->whereBetween('price', [0, 999])
-                        ->get();
+        if ($pricelist == 1) {
+            //$sale = Sale::latest()->get();
+
+        } elseif ($pricelist == 2) {
+            $sale = Sale::whereBetween('price', [0, 500])
+                    ->latest()
+                    ->get();
+        } elseif ($pricelist == 3) {
+            $sale = Sale::whereBetween('price', [501, 1000])
+                    ->latest()
+                    ->get();
+        } elseif ($pricelist == 4) {
+            $sale = Sale::whereBetween('price', [1001, 1500])
+                    ->latest()
+                    ->get();
+        } elseif ($pricelist == 5) {
+            $sale = Sale::where('price', '>', 1501)
+                    ->latest()
+                    ->get();
         } else {
             //最新順に並べる
             $sale = Sale::latest()->get();
         }
 
+        //dd($keyword,$pricelist);
+        //dd($pricelist);
         return view('home', [
             'sale' => $sale,
-            'keyword' => $request->keyword,
-            'pricelist' => $request->pricelist,
+            'keyword' => $keyword,
+            'pricelist' => $pricelist,
         ]);
     }
-
 
 }

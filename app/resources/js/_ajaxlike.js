@@ -1,46 +1,42 @@
-$(function () 
-{
-  var like = $('.js-like-toggle');
-  var likeSalesId;
-  
-  like.on('click', function () 
-  {
+$(function(){
+  //利用する変数を宣言（var 変数名 = 値）
+  var like = $('.btn btn-primary');
+  var likeSaleId;
+
+  //on()はイベントを処理するメソッド
+  like.on('click', function() {
     var $this = $(this);
-    likeSalesId = $this.data('salesid');
-    $.ajax(
-    {
-      //ajaxを使用するためにCSRFトークンを設定する必要がある
+    likeSaleId = $this.data('saleid');
+    $.ajax({
       headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },//絶対に必要なコード
-      url: '/ajaxlike',  //routeの記述
-      type: 'POST', //受け取り方法の記述（GETもある）
+        //Laravelでajaxを利用するためにはCSRFトークンを設定する必要がある
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/ajaxlike', //ルートの記述
+      type: 'POST', //受け取り方法の記述
       data: {
-          'sales_id': likeSalesId //コントローラーに渡すパラメーター
-        },
+        'sales_id':likeSaleId //コントローラーに渡すパラメーター
+      },
     })
-  
-    // Ajaxリクエストが成功した場合
-    .done(function (data) 
-    {
+
+    //Ajaxリクエストが成功した時
+    //.done()は後で実行したい処理
+    .done(function(data) {
       //lovedクラスを追加
-      $this.toggleClass('loved'); 
-    
-      //.likesCountの次の要素のhtmlを「data.salesLikesCount」の値に書き換える
-      $this.next('.likesCount').html(data.salesLikesCount); 
-
+      $this.toggleClass('loved');
+      //.likesCountの次の要素のhtmlを「data.saleLikesCount」の値に書き換える
+      $this.next('.likesCount').html(data.saleLikesCount);
     })
 
-    // Ajaxリクエストが失敗した場合
-    .fail(function (data, xhr, err) 
-    {
-      //ここの処理はエラーが出た時にエラー内容をわかるようにしておく。
-      //とりあえず下記のように記述しておけばエラー内容が詳しくわかります。笑
+    //Ajaxリクエストが失敗した時
+    //.fail()メソッドはエラーメッセージを出力する
+    .fail(function(data, xhr, err) {
       console.log('エラー');
       console.log(err);
       console.log(xhr);
     });
-      
+
     return false;
-  });
-});
+
+  })
+})

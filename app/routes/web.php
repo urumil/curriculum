@@ -5,6 +5,7 @@ use App\Http\Controllers\ResController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ToppageController;
 
 //use Illuminate\Support\Facades\Auth;
 
@@ -28,22 +29,19 @@ use App\Purchase;
 //     return view('welcome');
 // });
 
-//ログイン関連情報を呼び出し
-Auth::routes();
 //ホーム画面表示
 Route::get('/', [DisplayController::class, 'index']);
 //出品商品の詳細画面
 Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('detail');
 
+//ログイン関連情報を呼び出し
+Auth::routes();
 //ログインもしくは会員登録してから表示可能
 Route::group(['middleware' => 'auth'], function() {
     
     //一般ユーザー
     Route::group(['middleware' => ['auth', 'can:general']], function() {
-        //ホーム画面表示
-        Route::get('/', [DisplayController::class, 'index']);
-        //出品商品の詳細画面
-        Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('detail');
+        
         //マイページ画面表示
         Route::get('/mypage/{id}', [MypageController::class, 'index'])->name('mypage');
 
@@ -57,15 +55,24 @@ Route::group(['middleware' => 'auth'], function() {
         //マイページ画面編集処理
         Route::post('/mypage_edit/{id}', [MypageController::class, 'edit']);
 
+        //出品商品の詳細画面
+        Route::get('/mysale.detail/{id}', [MypageController::class, 'saleDetail'])->name('mysaledetail');
+        //マイページ用出品商品詳細編集画面
+        Route::get('/detail_edit/{id}', [MypageController::class, 'detailedit_form'])->name('saleedit');
+        //確認画面
+        Route::post('/edit_check/{id}', [MypageController::class, 'edit_check'])->name('check');
+        //マイページ用出品商品詳細編集処理
+        Route::post('/detail_complete/{id}', [MypageController::class, 'complete'])->name('complete');
+
         //退会（論理削除）
         Route::get('/mypage_delete/{id}', [MypageController::class, 'delete_form'])->name('delete');
 
         //いいね機能「ajaxlike.jsファイルのurl:'ルーティング'」に書くものと合わせる。
         Route::post('ajaxlike', [LikeController::class, 'ajaxlike'])->name('sales.ajaxlike');
-        //いいね
-        Route::get('/like/{id}', [LikeController::class, 'like'])->name('like');
-        //いいねを取り消す
-        Route::get('/unlike/{id}', [LikeController::class, 'unlike'])->name('unlike');
+        // //いいね
+        // Route::get('/like/{id}', [LikeController::class, 'like'])->name('like');
+        // //いいねを取り消す
+        // Route::get('/unlike/{id}', [LikeController::class, 'unlike'])->name('unlike');
         //マイページ画面表示
         Route::get('/likegoods/{id}', [LikeController::class, 'likegoods'])->name('likegoods');
 
@@ -87,6 +94,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/follow/{id}', [MypageController::class, 'follow'])->name('follow');
         //フォロー用のユーザー画面
         Route::get('/user/{id}', [MypageController::class, 'user_form'])->name('user');
+        //フォローを外す（物理削除）
+        Route::get('/delete_follow/{id}', [MypageController::class, 'del_follow'])->name('delete_follow');
 
         //売上一覧画面表示
         Route::get('/sell/{id}', [MypageController::class, 'sell_form'])->name('sell');

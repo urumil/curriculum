@@ -10,12 +10,16 @@
   <p class="card-text">商品の説明　　{{ $sale->comment }}</p>
 </div>
 <div class="card-body">
-  <img src="{{ $sale->user->image }}" class="img-thumbnail" alt="ユーザー画像">
+  <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="rounded-circle" alt="ユーザー画像" width="100" height="100">
   <a class="nav-link" href="{{ route('admuser', ['id' => $sale['user_id']]) }}">{{ $sale->user->name }}</a>
 </div>
-<a href="{{ route('softdelete_sale', ['id' => $sale['id']]) }}">
-  <button class='btn btn-primary'>商品を非表示にする</button>
-</a>
+<div class="row justify-content-around">
+  <div style="display:inline-flex">
+    <a href="{{ route('softdelete_sale', ['id' => $sale['id']]) }}">
+      <button class='btn btn-primary'>商品を非表示にする</button>
+    </a>
+  </div>
+</div>
 
 
 @endsection
