@@ -7,7 +7,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ToppageController;
 
-//use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 use App\Sale;
 use App\User;
@@ -38,6 +38,7 @@ Route::get('/sale.detail/{id}', [ResController::class, 'saleDetail'])->name('det
 Auth::routes();
 //ログインもしくは会員登録してから表示可能
 Route::group(['middleware' => 'auth'], function() {
+    //Route::middleware(['auth', 'redirect.based.on.group'])->group(function () {
     
     //一般ユーザー
     Route::group(['middleware' => ['auth', 'can:general']], function() {
@@ -64,16 +65,15 @@ Route::group(['middleware' => 'auth'], function() {
         //マイページ用出品商品詳細編集処理
         Route::post('/detail_complete/{id}', [MypageController::class, 'complete'])->name('complete');
 
+        //出品商品の削除(物理削除)
+        Route::get('/sale_delete/{id}', [MypageController::class, 'sale_delete'])->name('saledelete');
+
         //退会（論理削除）
         Route::get('/mypage_delete/{id}', [MypageController::class, 'delete_form'])->name('delete');
 
         //いいね機能「ajaxlike.jsファイルのurl:'ルーティング'」に書くものと合わせる。
-        Route::post('ajaxlike', [LikeController::class, 'ajaxlike'])->name('sales.ajaxlike');
-        // //いいね
-        // Route::get('/like/{id}', [LikeController::class, 'like'])->name('like');
-        // //いいねを取り消す
-        // Route::get('/unlike/{id}', [LikeController::class, 'unlike'])->name('unlike');
-        //マイページ画面表示
+        Route::post('/ajaxlike', [LikeController::class, 'ajaxlike'])->name('sales.ajaxlike');
+        //いいねした商品の一覧
         Route::get('/likegoods/{id}', [LikeController::class, 'likegoods'])->name('likegoods');
 
         //購入画面表示
@@ -108,7 +108,7 @@ Route::group(['middleware' => 'auth'], function() {
     //管理者用
     Route::group(['middware' => ['auth', 'can:admin']], function() {
         //ホーム画面表示（ユーザーリスト）
-        //Route::get('/', [AdminController::class, 'showAdminPage']);
+        Route::get('/admin', [AdminController::class, 'showAdminPage']);
         //管理者用ユーザー詳細画面
         Route::get('/admuser/{id}', [AdminController::class, 'showUserPage'])->name('admuser');
         //管理者用出品商品詳細画面
@@ -122,4 +122,5 @@ Route::group(['middleware' => 'auth'], function() {
         //利用停止中ユーザーの復元
         Route::get('/restore_user/{id}', [AdminController::class, 'restore_user'])->name('restore_user');
     });
+//});
 });

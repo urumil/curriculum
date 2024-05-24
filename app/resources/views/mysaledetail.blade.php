@@ -12,9 +12,15 @@
   <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="rounded-circle" alt="ユーザー画像" width="85" height="85">
         <a class="nav-link" href="{{ route('user', ['id' => $sale['user_id']]) }}">{{ $sale->user->name }}</a>
 </div>
-<div class='row justify-content-center'>
-  <a class="btn btn-primary w-25 mt-3" href="{{ route('saleedit', ['id' => $sale['id']]) }}" role="button">編集</a>
-</div> 
+<div class="row justify-content-around">
+  <div style="display:inline-flex">
+    <div class="grid text-center" style="width: 400px; margin: auto;">
+      <a class="btn btn-primary w-25 mt-3" href="{{ route('saleedit', ['id' => $sale['id']]) }}" role="button">編集</a>
+      <a href="{{ route('saledelete', ['id' => $sale['id']]) }}" class="btn btn-primary w-30 mt-3" 
+      onclick="return confirm('本当に削除しますか？')">商品を削除する</a>
+    </div> 
+  </div> 
+</div>
 
 
 @endsection

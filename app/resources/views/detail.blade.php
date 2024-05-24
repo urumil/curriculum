@@ -10,24 +10,30 @@
   <p class="card-text">商品の状態　　{{ $sale->quality }}</p>
   <p class="card-text">商品の説明　　{{ $sale->comment }}</p>
   <td>
-    @if($like_model->exists(Auth::user()->id, $sale->id))
-      <p class="favorite-marke">
-        <a class="js-like-toggle loved" href="" data-postid="{{ $sale->id }}">
-          <i class="fas fa-heart fa-2x"></i>
-        </a>
-        <span class="likesCount">{{ $sale->likes_count}}</span>
-      </p>
+    @if(Auth::user())
+      @if($like_model->like_exist(Auth::user()->id, $sale->id))
+        <p class="favorite-marke">
+          <a class="js-like-toggle loved" href="" data-postid="{{ $sale->id }}">
+            <i class="fas fa-heart fa-2x"></i>
+          </a>
+          <span class="likesCount">{{ $sales->likes_count}}</span>
+        </p>
+      @else
+        <p class="favorite-marke">
+          <a class="js-like-toggle" href="" data-postid="{{ $sale->id }}">
+            <i class="fas fa-heart fa-2x"></i>
+          </a>
+          <span class="likesCount">{{ $sales->likes_count}}</span>
+        </p>
+      @endif
     @else
-      <p class="favorite-marke">
-        <a class="js-like-toggle" href="" data-postid="{{ $sale->id }}">
-          <i class="fas fa-heart fa-2x"></i>
-        </a>
-        <span class="likesCount">{{ $sale->likes_count}}</span>
-      </p>
+    <p>
+      お気に入り登録されたい場合は<a href="{{ route('login') }}">ログイン</a>してください
+    </p>
     @endif
   </td> 
   <img src="{{ asset('public/image/' . $sale->user['image']) }}" class="rounded-circle" alt="ユーザー画像" width="85" height="85">
-        <a class="nav-link" href="{{ route('user', ['id' => $sale['user_id']]) }}">{{ $sale->user->name }}</a>
+  <a class="nav-link" href="{{ route('user', ['id' => $sale['user_id']]) }}">{{ $sale->user->name }}</a>
 </div>
 <div class="row justify-content-around">
   <div style="display:inline-flex">

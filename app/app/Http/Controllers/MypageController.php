@@ -45,6 +45,9 @@ class MypageController extends Controller
         $user = new User;
         $record = $user->find($id);
 
+        $request->validate([
+            'name' => 'required',
+        ]);
 
         if(isset($request->image)) {
             //name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
@@ -67,7 +70,7 @@ class MypageController extends Controller
         //echo $record;
         $record->save();
         //return view('mypage', ['id' => Auth::user()->id]);
-        return redirect('/');
+        return redirect()->route('mypage', ['id' => Auth::user()->id]);
 
     }
 
@@ -108,29 +111,6 @@ class MypageController extends Controller
         return view('like', [
             'like' => $like_all,
         ]);
-    }
-
-    //いいね商品一覧の処理
-    public function like(int $userid)
-    {
-        // //引数$idの中にはアイテムのidが入ってくる
-        // $user = Auth::user();
-        // $sale = Sale::find($id);
-        // //自分がいいねを押したアイデアかどうか。最初のハートの色判別用
-        // //Likesテーブルの中に自分のidかつ該当のアイテムのidの情報があるかどうか（つまりその商品に自分がいいねをしてるかどうか）
-        // $my_like = Like::where('user_id', $user->id)->where('sale_id', $id)->get();
-        // //もし自分がいいね追加済みならDBから消す（いいね解除）
-        // if ($my_like->count() > 0) {
-        //     Like::where('user_id', $user->id)->where('sale_id', $id)->delete();
-        // } else {
-        //     //まだならDB追加
-        //     Like::firstOrCreate(
-        //         array(
-        //             'user_id' => $user->id,
-        //             'sale_id' => $sale->id,
-        //         )
-        //     );
-        // }
     }
 
     //購入履歴一覧画面
@@ -181,7 +161,7 @@ class MypageController extends Controller
     {
         $follow = Follow::find($id);
         $follow->delete();
-        return redirect('/');
+        return redirect()->route('mypage', ['id' => Auth::user()->id]);
     }
 
     //フォロー用ユーザー画面
@@ -189,41 +169,81 @@ class MypageController extends Controller
     {
         $user = User::with('sale')->where('id', $id)->first();
         $sale = $user->sale()->get();
+        //$follow_id = Follow::find($id);
 
+        $myfollows = Auth::user()->follow()->get();
+        $test = '';
+        $myfollowid = '';
+        foreach ($myfollows as $myfollow)
+        {
+            if($myfollow->follow_id == $id)
+            {
+                $test = 'テスト';
+                $myfollowid = $myfollow->id;
+
+            }
+        }
+        if($test != 'テスト')
+        {
+            $test = '';
+            $myfollowid = '';
+
+        }
+
+        //dd($test);
+
+        // if(Auth::user()->follow()->follow_id === $user->id)
+        // $test = Auth::user()->
+
+        //dd($user,$sale);
         //var_dump($sale);
 
         return view('user', [
             'user' => $user,
             'sale' => $sale,
+            'test' => $test,
+            'myfollowid' => $myfollowid,
         ]);
     }
 
     //売上一覧画面
     public function sell_form(int $id)
     {
-        //$purchase = Auth::user()->purchase()->get();
-        //$sell = Auth::user()->sale()->get();
-        //$sell = Purchase::with('sale')->get();
-        //$sell = Purchase::get();
-        //$sell = Purchase::with('sale')
-                //  ->where('sales_id', '=', 'id')
-                //  ->get();
-        //$sell = Sale::with('user')
-                //  ->where('user_id', '=', $id)
-                //  ->get();
-        // $sell = Purchase::with('sale')
-        //          ->where('sales_id', '=', 'id')
-        //          ->where('user_id', '=', $id)
+        // $sell = Purchase::join('sales', 'purchases.sales_id', '=', 'sales.id')
+        //          ->where('sales.user_id', '=', $id)
         //          ->get();
-        $sell = Purchase::join('sales', 'purchases.sales_id', '=', 'sales.id')
-                 ->join('users', 'sales.user_id', '=', 'users.id')
-                 ->where('users.id', '=', $id)
-                 ->get();
         
+        // $other = Purchase::join('sales', 'purchases.sales_id', '=', 'sales.id')
+        //           ->join('users', 'sales.user_id', '=', 'users.id')
+        //           ->where('users.id', '=', $id)
+        //           ->get();
+        
+        // $data = array(
+        //     'sell' => $sell,
+        //     'other' => $other,
+        // );
 
+        // $datas = Auth::user()->with('sale')
+        //                      ->with('purchase')
+
+        $user = Auth::user();
+        $datas = User::with(['sale' => function ($query) {
+            $query->with(['purchase']);
+        }])->find($user->id);
+
+
+
+        //$datas = Auth::user();
+
+        //dd($datas);
+        //$key = array_keys($sell);
+        //dd(array_column($sell, 0, 'good'));
         //dd($sell);
+        //dd($data['sell']['0']['good']);
         return view('sell', [
-            'sell' => $sell,
+            // 'sell' => $sell,
+            // 'other' => $other,
+            'datas' => $datas,
         ]);
     }
 
@@ -243,12 +263,23 @@ class MypageController extends Controller
         $sale = Sale::with('user')->where('id', $id)->first();
         $result = $sale->find($id);
 
+        // $result->validate([
+        //     'name' => 'required',
+        //     'price' => 'required|integer',
+        //     'comment' => 'required',
+        //     'picture' => 'required',
+        //     'quality' => 'required',
+        // ]);
+
+        //dd($result);
+		
         return view('detail_edit', [
             'sale' => $sale,
             'id' => $id,
             'result' => $result,
         ]);
     }
+
 
     //確認画面
     public function edit_check(int $id, Request $request)
@@ -261,26 +292,38 @@ class MypageController extends Controller
 
         //dd($result);
         if(isset($request->picture)) {
+            //dd($request->picture);
             //name属性が'picture'のinputタグをファイル形式にして、画像を本来の名前にする
             $picture = $request->file('picture')->getClientOriginalName();
+
             //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
             $pic_name = date('Ymd_His').'_'.$picture;
+            
             //storage/imagesに画像を保存する
             $request->file('picture')->move('public/image/', $pic_name);
+            
             //上記処理にて保存した画像に名前を付け、salesテーブルのpictureカラムに、格納
             $request->picture = $pic_name;
+            
 
             //dd($request->picture);
-            
             //セッションに書き込む
-            $contact = $request->only('name','price','picture','quality','comment');
-            $request->session()->put('contact', $contact);
-            // $contact = $request->all();
+            $contact = $request->only('name','price','quality','comment');
+            //dd($contact);
+            $contact_pic = $pic_name;
+
+            $data = array(
+                'contact' => $contact,
+                'contact_pic' => $contact_pic,
+            );
+            
+            session()->put('data', $data);
             // $request->session()->put('contact', $contact);
 
         } else {
             $contact = $request->only('name','price','quality','comment');
-            $contact_pic = $result->only('picture');
+            $pic_name = '';
+            $contact_pic = $pic_name;
             //dd($contact,$contact_pic);
 
             $data = array(
@@ -292,13 +335,23 @@ class MypageController extends Controller
             
             //$request->session()->put('data', $data);
             session()->put('data', $data);
-            //$request->session()->put('contact', $contact);
-            //$result->session()->put('contact_pic', $contact_pic);
             
         }
 
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|integer',
+            'comment' => 'required',
+            'quality' => 'required|in:未使用,目立った傷や汚れなし,傷や汚れあり',
+        ], [
+            'quality.required' => '商品の状態を選択してください。',
+            'quality.in' => '選択された商品の状態が無効です。',
+        ]);
+
         // $contact = $request->all();
-        // dd($contact);
+        //dd($data);
+
+        
         
         return view('edit_check', [
             'sale' => $sale,
@@ -320,13 +373,23 @@ class MypageController extends Controller
         $record->price = $val['contact']['price'];
         $record->quality = $val['contact']['quality'];
         $record->comment = $val['contact']['comment'];
-        $record->picture = $val['contact_pic']['picture'];
+        if($val['contact_pic'] != '') {
+            $record->picture = $val['contact_pic'];
+        }
+        
 
 
         //echo $record;
         $record->save();
         //return view('mypage', ['id' => Auth::user()->id]);
-        return redirect('/');
-        //return view('mypage', ['id' => Auth::user()->id]);
+        //return redirect('/');
+        return redirect()->route('mypage', ['id' => Auth::user()->id]);
+    }
+
+    //出品商品の削除（物理削除）
+    public function sale_delete(int $id)
+    {
+        $sale = Sale::find($id)->delete();;
+        return redirect()->route('mypage', ['id' => Auth::user()->id]);
     }
 }

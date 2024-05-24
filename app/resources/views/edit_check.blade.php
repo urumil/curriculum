@@ -7,7 +7,11 @@
       @csrf
       <div>商品画像</div>
       <div class="form-group row">
-        <img src="{{ asset('public/image/' . $data['contact_pic']['picture']) }}" alt="{{ $sale->picture }}" class="rounded mx-auto d-block" width="400" height="400">
+        @if($data['contact_pic'] != '')
+        <img src="{{ asset('public/image/' . $data['contact_pic']) }}" alt="{{ $sale->picture }}" class="rounded mx-auto d-block" width="400" height="400">
+        @else
+        <p>画像更新なし</p>
+        @endif
       </div>
       <div class="form-group row">
         <label for="name" class="col-sm-2 col-form-label">商品名</label>

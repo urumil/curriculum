@@ -9,8 +9,13 @@
       <input type="file"  name="image" value="{{ $result['image'] }}"/>
     </div>
     <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label" >ユーザー名</label>
-      <input type="name" class="form-control" id="exampleFormControlInput1" name="name" value="{{ $result['name'] }}">
+      <label for="exampleFormControlInput1" class="form-label" >ユーザー名<span class="badge badge-danger ml-2">{{ __('必須') }}</label>
+      <input type="name" class="form-control  {{ $errors->has('name') ? 'is-invalid' : '' }}" id="exampleFormControlInput1" name="name" value="{{ $result['name'] }}">
+      @if ($errors->has('name'))
+        <span class="invalid-feedback" role="alert">
+          {{ $errors->first('name') }}
+        </span>
+      @endif
     </div>
     <div class="mb-3">
       <label for="exampleFormControlTextarea1" class="form-label">自己紹介</label>

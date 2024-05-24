@@ -21,6 +21,6 @@ class Like extends Model
     }
 
     public function like_exist($user_id, $sales_id) {        
-        return Like::where('user_id', $user_id)->where('ssales_id', $sales_id)->exists();       
+        return Like::where('user_id', $user_id)->where('sales_id', $sales_id)->exists();       
     }
 }

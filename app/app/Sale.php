@@ -17,9 +17,9 @@ class Sale extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function like()
+    public function likes()
     {
-        return $this->hasMany('App\Like');
+        return $this->hasMany('App\Like', 'sales_id', 'id');
     }
 
     public function purchase()
@@ -37,5 +37,15 @@ class Sale extends Model
     //論理削除
     use SoftDeletes;
 
+    public function validate()
+    {
+        return [
+            'name' => 'required',
+            'price' => 'required|integer',
+            'comment' => 'required',
+            'picture' => 'required',
+            'quality' => 'required',
+        ];
+    }
     
 }

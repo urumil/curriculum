@@ -18,7 +18,8 @@ class DisplayController extends Controller
         $sale = new Sale;
 
         $keyword = $request->input('keyword'); //キーワードの値
-        $pricelist = $request->input('pricelist'); //価格の値
+        $top = $request->input('top');//価格の範囲検索
+        $down = $request->input('down');//価格の範囲検索
        
         //$query = Sale::query();
         //キーワード検索
@@ -32,24 +33,18 @@ class DisplayController extends Controller
             $sale = Sale::latest()->get();
         }
 
-        //プルダウン価格検索
-        if ($pricelist == 1) {
-            //$sale = Sale::latest()->get();
-
-        } elseif ($pricelist == 2) {
-            $sale = Sale::whereBetween('price', [0, 500])
+        //価格の範囲検索
+        if (isset($top) && isset($down))
+        {
+            $sale = Sale::whereBetween('price', [$top, $down])
                     ->latest()
                     ->get();
-        } elseif ($pricelist == 3) {
-            $sale = Sale::whereBetween('price', [501, 1000])
+        } elseif(isset($top) && !isset($down)) {
+            $sale = Sale::where('price', '>=', $top)
                     ->latest()
                     ->get();
-        } elseif ($pricelist == 4) {
-            $sale = Sale::whereBetween('price', [1001, 1500])
-                    ->latest()
-                    ->get();
-        } elseif ($pricelist == 5) {
-            $sale = Sale::where('price', '>', 1501)
+        } elseif(!isset($top) && isset($down)) {
+            $sale = Sale::where('price', '<=', $down)
                     ->latest()
                     ->get();
         } else {
@@ -57,12 +52,45 @@ class DisplayController extends Controller
             $sale = Sale::latest()->get();
         }
 
+        //キーワード検索と価格検索を同時に実行して絞る
+        if (isset($keyword) && isset($top) && isset($down))
+        {
+            $sale = Sale::whereBetween('price', [$top, $down])
+                    ->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('comment', 'LIKE', "%{$keyword}%")
+                    ->latest()
+                    ->get();
+        } elseif(isset($keyword) && !isset($top) && !isset($down))
+        {
+            $sale = Sale::where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('comment', 'LIKE', "%{$keyword}%")
+                    ->latest()
+                    ->get();
+        } elseif(isset($keyword) && !isset($top))
+        {
+            $sale = Sale::where('price', '<=', $down)
+                    ->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('comment', 'LIKE', "%{$keyword}%")
+                    ->latest()
+                    ->get();
+        } elseif(isset($keyword) && !isset($down))
+        {
+            $sale = Sale::where('price', '>=', $top)
+                    ->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('comment', 'LIKE', "%{$keyword}%")
+                    ->latest()
+                    ->get();
+        } 
+
+
         //dd($keyword,$pricelist);
-        //dd($pricelist);
+        //dd($keyword,$top,$down);
         return view('home', [
             'sale' => $sale,
             'keyword' => $keyword,
-            'pricelist' => $pricelist,
+            //'pricelist' => $pricelist,
+            'top' => $top,
+            'down' => $down,
         ]);
     }
 

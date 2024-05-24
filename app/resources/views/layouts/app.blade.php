@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">    
 
     <title><img src="{{ asset('img/freemarket (1).png') }}" alt="freemarket"></title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    if (typeof jQuery !== 'undefined') {
+        console.log('jQuery is loaded');
+    } else {
+        console.log('jQuery is not loaded');
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -66,37 +74,44 @@
 
     <script>
     console.log('読み込み');
+    console.log('読み込み2');
     var like = $('.js-like-toggle');
     console.log(like);
     var likeSaleId;
-    console.log('読み込み2');
-    like.on('click', function() {
-      console.log('クリック');
-      var $this = $(this);
-      likeSaleId = $this.data('postid');
-      $.ajax({
+    console.log('読み込み3');
+    $(document).on('click', '.js-like-toggle', function() {
+    console.log('クリック');
+    var $this = $(this);
+    likeSaleId = $this.data('postid');
+    console.log(likeSaleId);
+    $.ajax({
         headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         url: '/ajaxlike',
         type: 'POST',
         data: {
-          'sales_id': likeSaleId
+            'sales_id': likeSaleId
         },
-      })
-      .done(function(data) {
+    })
+    .done(function(data) {
         console.log('チェック');
         $this.toggleClass('loved');
         $this.next('.likesCount').html(data.saleLikesCount);
-      })
-      .fail(function(data, xhr, err) {
+    })
+    .fail(function(xhr, status, error) {
         console.log('エラー');
-        console.log(err);
+        console.log('ステータス: ' + status);
+        console.log('エラー: ' + error);
         console.log(xhr);
-      });
-      return false;
     });
-</script>
-
+    return false;
+    });
+    </script>
+    <style>
+    .loved i {
+    color: red !important;
+    }
+    </style>
 </body>
 </html>

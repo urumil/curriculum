@@ -26,19 +26,23 @@ class LikeController extends Controller
 
     public function ajaxlike(Request $request)
     {
-        $id = Auth::use()->id;
+        //dd($request);
+        $id = Auth::user()->id;
         $sales_id = $request->sales_id;
         $like = new Like;
-        $sale = Sale::findOrFll($sales_id);
+        $sale = Sale::findOrFail($sales_id);
 
         //すでにいいねをしているなら
-        if($like->exists($id, $sales_id)) {
+        if($like->like_exist($id, $sales_id)) {
+            //dd('登録済み');
+
             //likesテーブルのレコードを削除
             $like = Like::where('sales_id', $sales_id)
                       ->where('user_id', $id)
                       ->delete();
         } else {
             //まだいいねをしていないなら、Likesテーブルに新しいレコードを作成する
+            //dd('check');
             $like = new Like;
             $like->sales_id = $request->sales_id;
             $like->user_id = Auth::user()->id;
@@ -46,8 +50,7 @@ class LikeController extends Controller
         }
 
         //いいねの総数を取得
-        $saleLikesCount = $sale->loadCount('likes')->like_count;
-
+        $saleLikesCount = $sale->loadCount('likes')->likes_count;
         //一つの変数にajaxを渡す値をまとめる
         $json = [
             'saleLikesCount' => $saleLikesCount,
@@ -55,5 +58,16 @@ class LikeController extends Controller
 
         //ajaxに引数の値を返す。「ajaxlike.jsファイル」にパラメーターを返す
         return response()->json($json);
+    }
+
+    public function likegoods(int $id)
+    {
+        $like = Like::with('sale')->get();
+        $like = Auth::user()->likes()->get();
+
+        //dd($like);
+        return view('likegoods', [
+            'like' => $like,
+        ]);
     }
 }

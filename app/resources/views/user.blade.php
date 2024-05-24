@@ -14,12 +14,15 @@
     </div>
   </div>
 </div>
-<form action="{{ route('follow', ['id' => $user['id']]) }}" method="get" enctype="multipart/form-data"> 
+@if($test == 'テスト')
   <div class='row justify-content-center'>
-    <button type='submit' class='btn btn-primary w-25 mt-3'>フォローする</button>
+    <a href="{{ route('delete_follow', ['id' => $myfollowid]) }}" class="btn btn-primary">フォローを外す</a>
   </div>
-</form>
-
+@else
+  <div class='row justify-content-center'>
+    <a href="{{ route('follow', ['id' => $user['id']]) }}" class="btn btn-primary">フォローする</a>
+  </div>
+@endif
 <hr class="border border-dark border-3 opacity-75">
 <div class="container text-center">
   <div class="row">
@@ -36,5 +39,7 @@
     @endforeach
   </div>
 </div>
+
+
 
 @endsection

@@ -13,14 +13,14 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($sell as $sell)
+    @foreach($datas['sale'] as $data)
     <tr>
-      <td>{{ $sell->good }}</td>
+      <td>{{ $data['name'] }}</td>
       <td>
-        <span class="label">{{ $sell->sale->price }}円</span>
+        <span class="label">{{ $data['price'] }}円</span>
       </td>
-      <td>{{ $sell->created_at }}</td>
-      <td><a href="{{ route('detail', ['id' => $sell->sale['id']]) }}">詳細</a></td>
+      <td>{{ $data['purchase'][0]['created_at'] }}</td>
+      <td><a href="{{ route('detail', ['id' => $data['id']]) }}">詳細</a></td>
     </tr>
     @endforeach
   </tbody>

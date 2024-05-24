@@ -17,13 +17,16 @@ class ResController extends Controller
         $sale = Sale::with('user')->where('id', $id)->first();
         
         //withCount('テーブル名')とすることで、リレーションの数を取得
-        //$sales = Sale::withCount('likes');
+        $sales = Sale::withCount('likes')->find($id);
+        //dd($sales);
         $like_model = new Like;
+
 
         return view('detail', [
             'sale' => $sale,
-            //'like' => $like,
+            'sales' => $sales,
             'like_model' => $like_model,
+
         ]);
     }
 
@@ -41,6 +44,16 @@ class ResController extends Controller
     public function confirm(int $id, Request $request)
     {
         $sale = Sale::with('user')->where('id', $id)->first();
+
+        //バリデーション
+        $request->validate([
+            'name' => 'required',
+            'tel' => 'required|integer',
+            'comment' => 'required',
+            'picture' => 'required|image',
+            'quality' => 'required|in:未使用,目立った傷や汚れなし,傷や汚れあり',
+        ]);
+
         //セッションに書き込む
         $contact = $request->all();
         $request->session()->put('contact', $contact);
@@ -117,6 +130,18 @@ class ResController extends Controller
     {
         $sale = new Sale;
 
+        //バリデーション
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|integer',
+            'comment' => 'required',
+            'picture' => 'required|image',
+            'quality' => 'required|in:未使用,目立った傷や汚れなし,傷や汚れあり',
+        ], [
+            'quality.required' => '商品の状態を選択してください。',
+            'quality.in' => '選択された商品の状態が無効です。',
+        ]);
+
         // name属性が'image'のinputタグをファイル形式にして、画像を本来の名前にする
         $picture= $request->file('picture')->getClientOriginalName();
         //同じファイル名の画像でも良いように日時をが王ファイルの名前につける
@@ -133,10 +158,6 @@ class ResController extends Controller
 
         //ログイン中のユーザー(Auth::user)が持つ(->)収入データ(income)として(->)入力値を保存(save(データ))
         Auth::user()->sale()->save($sale);
-        //dd($request->id);
-        //DBに保存
-        //$sale->save();
-        //画像をアップする画面へ戻る
         return redirect('/');
     }
 

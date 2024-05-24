@@ -146,6 +146,12 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => '商品名',
+        'price' => '価格',
+        'comment' => '商品の説明',
+        'picture' => '商品の画像',
+        'quality' => '商品の状態',
+    ],
 
 ];

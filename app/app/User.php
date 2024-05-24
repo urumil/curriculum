@@ -24,9 +24,9 @@ class User extends Authenticatable
     }
 
     //いいねと紐付け
-    public function like()
+    public function likes()
     {
-        return $this->hasMany('App\Like');
+        return $this->hasMany('App\Like', 'user_id', 'id');
     }
 
     //この投稿に対して既にlikeしたかどうかを判別する
@@ -35,25 +35,25 @@ class User extends Authenticatable
       return $this->like()->where('sales_id',$salesid)->exists();
     }
 
-    //isLikeを使って、既にlikeしたか確認したあと、いいねする（重複させない）
-    public function likes($salesid)
-    {
-      if($this->isLike($salesid)){
-        //もし既に「いいね」していたら何もしない
-      } else {
-        $this->like()->attach($salesid);
-      }
-    }
+    // //isLikeを使って、既にlikeしたか確認したあと、いいねする（重複させない）
+    // public function likes($salesid)
+    // {
+    //   if($this->isLike($salesid)){
+    //     //もし既に「いいね」していたら何もしない
+    //   } else {
+    //     $this->like()->attach($salesid);
+    //   }
+    // }
 
-    //isLikeを使って、既にlikeしたか確認して、もししていたら解除する
-    public function unlike($salesid)
-    {
-      if($this->isLike($salesid)){
-        //もし既に「いいね」していたら消す
-        $this->like()->detach($salesid);
-      } else {
-      }
-    }
+    // //isLikeを使って、既にlikeしたか確認して、もししていたら解除する
+    // public function unlike($salesid)
+    // {
+    //   if($this->isLike($salesid)){
+    //     //もし既に「いいね」していたら消す
+    //     $this->like()->detach($salesid);
+    //   } else {
+    //   }
+    // }
 
     //フォローと紐付け
     public function follow()
@@ -99,4 +99,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function validate()
+    {
+        return [
+            'name' => 'required',
+        ];
+    }
 }
